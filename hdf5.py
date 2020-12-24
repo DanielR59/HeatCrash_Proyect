@@ -13,11 +13,15 @@ def leerParametros(archivoHDF5,*parametros,diccionario={}):
                 diccionario[parametro]=int(np.array(valor))
                 
             elif valor.dtype == float:
-                diccionario[parametro]=float(np.array(valor))
-                
+                try:
+                    diccionario[parametro]=float(np.array(valor))
+                except TypeError:
+                    diccionario[parametro]=np.array(valor)
             elif valor.dtype == object:
                 diccionario[parametro]=np.array2string(valor) 
         return diccionario
+
+
 def saveParametros(archivoHDF5,diccionario):
     
     
