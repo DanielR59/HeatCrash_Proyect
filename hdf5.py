@@ -54,12 +54,17 @@ if __name__ == "__main__":
         'bx' : 2,
         'ay' : 0,
         'by' : 1,
-        'Nx' : 200,
-        'Ny' : 100,
-        'Tx1' : 0,
+        'Nx' : 50,
+        'Ny' : 30,
+        'Tx1' : -20,
         'Tx2' : 100,
         'Ty1' : 0,
-        'Ty2' : 0
+        'Ty2' : 0,
+        'Tini' : 20,
+        'ht' : 0.01,
+        'Tmax' : 1,
+        'Tolerancia' : 1E-4,
+
     }
 
     saveParametros(archivo,Datos)

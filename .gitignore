@@ -1,2 +1,7 @@
+#Carpetas
 workspace.code-workspace
 __pycache__/
+
+
+#Archivos
+*.gif
