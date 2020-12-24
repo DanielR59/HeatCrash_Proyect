@@ -62,6 +62,5 @@ if __name__ == "__main__":
         'Ty2' : 0
     }
 
-    with h5py.File(archivo,'w') as f:
-        for key,values in Datos.items():
-            f[key]=values
+    saveParametros(archivo,Datos)
+
