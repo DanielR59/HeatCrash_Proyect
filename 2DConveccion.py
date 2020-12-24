@@ -4,8 +4,7 @@ import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from matplotlib.animation import FuncAnimation
+
 
 def poissonIteration(u,q,hx,hy,ht,k):
     
@@ -124,16 +123,16 @@ if __name__ == "__main__":
     Datos['ht']=ht
     hdf5.saveParametros(out_file_name,Datos)
 
-    # fig = plt.figure(figsize=(11, 7), dpi=100)
-    # plt.contourf(xg, yg, u)
-    # plt.colorbar()
-    # plt.contour(xg, yg, u)
-    # plt.xlabel('X')
-    # plt.ylabel('Y')
+    fig = plt.figure(figsize=(11, 7), dpi=100)
+    plt.contourf(xg, yg, u)
+    plt.colorbar()
+    plt.contour(xg, yg, u)
+    plt.xlabel('X')
+    plt.ylabel('Y')
     
-    # plt.figure()
-    # plt.plot(errores)
-    # plt.semilogy()
+    plt.figure()
+    plt.plot(errores)
+    plt.semilogy()
     
     
-    # plt.show()
+    plt.show()
