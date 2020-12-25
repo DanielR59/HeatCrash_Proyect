@@ -37,19 +37,26 @@ if __name__ == "__main__":
     
     #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'Nt','ht','xg','yg','solucion_animada')
-    
     for key,val in Datos.items():
 
         exec(key + '=val')
-
     
+    if Nt>=20000:
+        step=4000
+    elif 10000<=Nt<20000:
+        step = 2000
+    elif 6000<Nt<10000:
+        step=200
+    else:
+        step=50
     
     def animate(Nt):
         minimo=np.amin(solucion_animada)
         maximo=np.amax(solucion_animada)
         plotheatmap(xg,yg,solucion_animada[Nt], Nt,ht,minimo,maximo)
-    
+    print("Empezando a generar animacion")
+    print("Este proceso puede tardar varios minutos dependiendo del numero de soluciones Nt \n ve y echate un refresquito")
     fig = plt.figure()
-    anim = FuncAnimation(fig, animate,frames=range(0,Nt+1,50), interval=ht*100, repeat=False)
+    anim = FuncAnimation(fig, animate,frames=range(0,Nt+1,step), interval=500, repeat=False)
     anim.save("heat_equation_solution.gif")
     print("Animacion lista :D \nBuscala en tu carpeta")
