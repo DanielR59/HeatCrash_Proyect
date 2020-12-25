@@ -17,6 +17,8 @@ def leerParametros(archivoHDF5,*parametros,diccionario={}):
                     diccionario[parametro]=float(np.array(valor))
                 except TypeError:
                     diccionario[parametro]=np.array(valor)
+            elif valor.dtype == np.float16:
+                diccionario[parametro]=np.array(valor,dtype=np.float16)
             elif valor.dtype == object:
                 diccionario[parametro]=np.array2string(valor) 
         return diccionario
@@ -54,13 +56,13 @@ if __name__ == "__main__":
         'bx' : 1,
         'ay' : 0,
         'by' : 1,
-        'Nx' : 50,
-        'Ny' : 50,
+        'Nx' : 100,
+        'Ny' : 100,
         'Tx1' : 100,
         'Tx2' : 50,
         'Ty1' : 0,
         'Ty2' : 200,
-        'Tini' : 10,
+        'Tini' : -100,
         'ht' : 0.01,
         'Tmax' : 1,
         'Tolerancia' : 1E-4,
