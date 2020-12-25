@@ -90,10 +90,10 @@ if __name__ == "__main__":
     u[0   ,:   ] = Tx1 
 
     q=np.ones_like(u)*0
-    q[5,5]=200500
+    # q[5,5]=200500
 
     errores=[]
-    solucion=np.empty([10000,Ny+2,Nx+2])
+    solucion=np.empty([25000,Ny+2,Nx+2])
     for n in range(Nt+1):
         solucion[n,:,:]=u
         u,error=poissonIteration(u,q,hx,hy,ht,k)
@@ -104,17 +104,13 @@ if __name__ == "__main__":
     
     solucion=solucion[:n+1,:,:]
     
-    answer=input('Quieres guardar la solucion para generar una animación?  [y/n]')
+    answer=input('Quieres guardar la solucion para generar una animación?  [y/n]\n')
     if answer =='y':
         Datos['solucion_animada']=solucion
     elif answer =='n':
         pass
     else:
         pass
-
-
-    
-
     Datos['error']=errores
     Datos['xg']=xg
     Datos['yg']=yg
