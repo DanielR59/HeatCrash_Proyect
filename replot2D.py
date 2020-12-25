@@ -9,13 +9,13 @@ if __name__ == "__main__":
     try:
         in_file_name = sys.argv[1]; 
     except:
-        mensaje = """ Error: La ejecucion de este programa requiere de 2 argumentos.
-        Ejecucion correcta: python 2D_Poisson_01.py entrada salida
-        donde "entrada" es el nombre de un archivo que contiene los
-        datos del problema :  este se puede generar con el programa hdf5.py.
-        El nombre "salida" se usa para almacenar la solucion_animada del problema.
+        mensaje = """ Error: La ejecucion de este programa requiere de 1 argumento.
+        Ejecucion correcta: python {} ArchivoEntrada 
 
-        Por ejemplo: python 2D_Poisson_01.py SALIDA""" 
+        Donde "ArchivoEntrada" es el nombre de un archivo que contiene la solucion almacenada 
+        de un problema 2D
+
+        Por ejemplo: python {} SALIDA""".format(__file__,__file__) 
 
         print(mensaje)
         sys.exit(1)
