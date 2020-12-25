@@ -21,15 +21,16 @@ def plotheatmap(xg,yg,u_k, Nt,ht,minimo,maximo):
 if __name__ == "__main__":
     
     try:
-        in_file_name = sys.argv[1]; 
+        in_file_name = sys.argv[1]; out_file_name = sys.argv[2]
     except:
         mensaje = """ Error: La ejecucion de este programa requiere de 2 argumentos.
-        Ejecucion correcta: python 2D_Poisson_01.py entrada salida
+        Ejecucion correcta: python {} entrada salida
         donde "entrada" es el nombre de un archivo que contiene los
-        datos del problema :  este se puede generar con el programa hdf5.py.
-        El nombre "salida" se usa para almacenar la solucion_animada del problema.
+        datos resultados de un problema 2D que involucre el tiempo.
+        El nombre "salida" es el nombre y tipo de archivo que se generara de la animación.
+        Este puede ser tanto .gif como .mp4
 
-        Por ejemplo: python 2D_Poisson_01.py SALIDA""" 
+        Por ejemplo: python {} ENTRADA SALIDA.gif""".format(__file__,__file__) 
 
         print(mensaje)
         sys.exit(1)
@@ -40,23 +41,36 @@ if __name__ == "__main__":
     for key,val in Datos.items():
 
         exec(key + '=val')
-    
+    #Sleccionamos un paso adecuado
     if Nt>=20000:
-        step=4000
+        step = int(0.05/ht)
     elif 10000<=Nt<20000:
-        step = 2000
+        step = int(0.02/ht)
     elif 6000<Nt<10000:
-        step=200
+        step = int(0.005/ht)
     else:
-        step=50
+        step = 50
     
-    def animate(Nt):
-        minimo=np.amin(solucion_animada)
-        maximo=np.amax(solucion_animada)
+    #Checamos el nombre del archivo de salida
+    if out_file_name.endswith('.gif'):
+        pass
+    elif out_file_name.endswith('.mp4'):
+        pass
+    else:
+        out_file_name+='.gif'
+
+
+    #Parametros de la animacion
+    minimo=np.amin(solucion_animada)
+    maximo=np.amax(solucion_animada)
+    def animate(Nt):        
         plotheatmap(xg,yg,solucion_animada[Nt], Nt,ht,minimo,maximo)
+
+    #Empezamos a generar la animacion    
     print("Empezando a generar animacion")
-    print("Este proceso puede tardar varios minutos dependiendo del numero de soluciones Nt \n ve y echate un refresquito")
+    print("Este proceso puede tardar varios minutos dependiendo del numero de soluciones Nt \nVe y echate un refresquito")
     fig = plt.figure()
     anim = FuncAnimation(fig, animate,frames=range(0,Nt+1,step), interval=500, repeat=False)
-    anim.save("heat_equation_solution.gif")
+    anim.save(out_file_name)
+    
     print("Animacion lista :D \nBuscala en tu carpeta")
