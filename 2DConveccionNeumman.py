@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # q[5,5]=100500
 
     errores=[]
-    solucion=np.empty([50000,Ny+2,Nx+2])
+    solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
     for n in range(Nt+1):
         solucion[n,:,:]=u
         u,error=poissonIteration(u,q,hx,hy,ht,k)
