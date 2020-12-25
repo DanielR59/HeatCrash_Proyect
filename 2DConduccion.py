@@ -40,6 +40,7 @@ def left_matrix_2D(Nx,Ny):
 
 
 if __name__ == "__main__":
+    #                       Tx2
     #  0,0                 frontera A
     #   o-----o-----o-----o-----o-----o-----o-----o
     #   |     |     |     |     |     |     |     |     f
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     #   |     |     |     |     |     |     |     |
     #   o-----o-----o-----o-----o-----o-----o-----o
     #                       Nx
+    #                       Tx1
 
     #                   frontera B
     try:
@@ -101,14 +103,8 @@ if __name__ == "__main__":
     f[:,-1]-=Ty2
     
     
-    # A=csr_matrix(Laplaciano2D(Nx,Ny,-4)) #Convertimos a una matriz sparse
+    #Convertimos a una matriz sparse
     A=csr_matrix(left_matrix_2D(Nx,Ny))
-    # A=csr_matrix(left_matrix_2D(hx,hy,Nx,Ny))
-    # print(A.todense())
-    # print(C.todense())
-    # print((A.todense()==B.todense()).all())
-    # print((B.todense()==C.todense()).all())
-
     u = np.zeros((Ny+2, Nx+2))
     u[-1,:   ] = Tx2 
     u[:   ,0   ] = Ty1 
@@ -116,7 +112,8 @@ if __name__ == "__main__":
     u[0   ,:   ] = Tx1 
     
     u_sistema = np.zeros([Ny*Nx])
-    # print(A.shape,f.flatten().shape)
+    
+    
     print('-'*80)
     t1_start = time.process_time()
     u_sistema=spsolve(A,f.flatten())
@@ -127,6 +124,9 @@ if __name__ == "__main__":
 
     
     u[1:Ny+1,1:Nx+1] = u_sistema
+    
+    
+    
     
     Datos['xgrid']=xg
     Datos['ygrid']=yg
