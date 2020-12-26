@@ -6,4 +6,5 @@ Despues se utiliza el programa correspondiente de acuerdo al problema que se qui
 
 Si se quiere volver a graficar la solucion se usa el programa replot.py
 
-Si se quiere generar una animacion si se guardo la solucion de un problema temporal se utiliza el programa animacion2D.py
+Para generar una animación se puede utilizar el programa animacion2D.py mientras se haya guardado la solución del problema temporal
+
