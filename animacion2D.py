@@ -29,6 +29,7 @@ if __name__ == "__main__":
         datos resultados de un problema 2D que involucre el tiempo.
         El nombre "salida" es el nombre y tipo de archivo que se generara de la animación.
         Este puede ser tanto .gif como .mp4
+        NOTA: Si no tienes ffmpeg no podras guardar como .mp4
 
         Por ejemplo: python {} ENTRADA SALIDA.gif""".format(__file__,__file__) 
 

@@ -52,19 +52,20 @@ if __name__ == "__main__":
     #Generamos parametros
     archivo=in_file_name
     Datos={
+
         'ax' : 0,
         'bx' : 1,
         'ay' : 0,
         'by' : 1,
-        'Nx' : 100,
-        'Ny' : 100,
+        'Nx' : 50,
+        'Ny' : 50,
         'Tx1' : 100,
-        'Tx2' : 50,
-        'Ty1' : 0,
-        'Ty2' : 200,
-        'Tini' : -100,
+        'Tx2' : 0,
+        'Ty1' : 1000,
+        'Ty2' : -300,
+        'Tini' : -150,
         'ht' : 0.01,
-        'Tmax' : 1,
+        'Tmax' : 2,
         'Tolerancia' : 1E-4,
 
     }
