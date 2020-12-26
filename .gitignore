@@ -9,7 +9,7 @@
 #Carpetas
 workspace.code-workspace
 __pycache__/
-
+.pylint.d
 #Archivos
 *.gif
 *.mp4
