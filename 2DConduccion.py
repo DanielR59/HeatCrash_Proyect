@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from scipy.sparse.linalg import spsolve
 from scipy.sparse import csr_matrix
-from funciones2D import left_matrix_2D, boundaryCondDirichtlet
+from funciones2D import left_matrix_2d, boundary_cond_dirichtlet
 
 if __name__ == "__main__":
     #                       Tx2
@@ -40,24 +40,22 @@ if __name__ == "__main__":
         print(mensaje)
         sys.exit(1)
 
-    
-    
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2')
-    
+
     for key,val in Datos.items():
         print(key,'=',val)
         print('-'*10)
         exec(key + '=val')
-        
-    
+
+
     hx = (bx-ax)/(Nx+1)
     hy = (by-ay)/(Ny+1)
     x = np.linspace(ax,bx,Nx+2)
     y = np.linspace(ay,by,Ny+2)
     xg, yg = np.meshgrid(x,y)
 
-    
-    
+
+
     print('hx = ',hx)
     print('hy = ',hy)
 
@@ -70,29 +68,29 @@ if __name__ == "__main__":
     f[-1,:]-=Tx2
     f[:,0]-=Ty1
     f[:,-1]-=Ty2
-    
-    
+
+
     #Convertimos a una matriz sparse
-    A=csr_matrix(left_matrix_2D(Nx,Ny))
+    A=csr_matrix(left_matrix_2d(Nx,Ny))
     u = np.zeros((Ny+2, Nx+2))
-    u= boundaryCondDirichtlet(u,Tx1,Tx2,Ty1,Ty2)
+    u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
     u_sistema = np.zeros([Ny*Nx])
-    
-    
+
+
     print('-'*80)
     t1_start = time.process_time()
     u_sistema=spsolve(A,f.flatten())
     t1_stop = time.process_time()
     print('Tiempo para resolver el sistema = {:0.6f} s'.format(t1_stop-t1_start))
     print('-'*80)
-    u_sistema.shape = (Ny, Nx) 
+    u_sistema.shape = (Ny, Nx)
 
-    
+
     u[1:Ny+1,1:Nx+1] = u_sistema
-    
-    
-    
+
+
+
     
     Datos['xg']=xg
     Datos['yg']=yg
@@ -101,13 +99,12 @@ if __name__ == "__main__":
     hdf5.saveParametros(out_file_name,Datos)
 
 
-    
     f1=plt.figure()
     c= plt.contourf(xg, yg, u, 8, alpha=.75,cmap='inferno')
     f1.colorbar(c, shrink=1.0)
-    
+
     f2 = plt.figure()
-    ax = f2.gca(projection='3d')    
+    ax = f2.gca(projection='3d')
     s = ax.plot_surface(xg, yg, u, cmap='inferno')
     f2.colorbar(s, shrink=0.5)
 

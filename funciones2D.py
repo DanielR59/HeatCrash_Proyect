@@ -10,7 +10,7 @@ import numpy as np
 # =============================================================================
 # Condiciones de frontera
 # =============================================================================
-def boundaryCondDirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
+def boundary_cond_dirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
     """
     Funcion que agrega las condiciones de frontera tipo Dirichlet a la matriz
                            Tx2
@@ -49,23 +49,21 @@ def boundaryCondDirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
         DESCRIPTION.
 
     """
-
-    matriz[-1,:] = Tx2 
-    matriz[:,0] = Ty1 
+    matriz[-1,:] = Tx2
+    matriz[:,0] = Ty1
     matriz[:,-1] = Ty2
-    matriz[0,:] = Tx1 
+    matriz[0,:] = Tx1
     return matriz
 
 
 
-    
 # =============================================================================
 # Funciones para casos Estacionarios
 # =============================================================================
 
-def left_matrix_2D(Nx,Ny):
+def left_matrix_2d(Nx,Ny):
     """
-    Funcion que genera la matriz cuadrada izquierda de dimensiones Nx*Ny para 
+    Funcion que genera la matriz cuadrada izquierda de dimensiones Nx*Ny para
     resolver el sistema del caso estacionario en 2D
 
     Parameters
@@ -81,27 +79,26 @@ def left_matrix_2D(Nx,Ny):
         DESCRIPTION.
 
     """
-        
-    multiples_auxiliares=np.array(range(Nx,Nx*Ny,Nx)) #No preguntes solo gozalo
-    multiples_auxiliares-=1 #Porque python empieza en 0 
+    multiples_auxiliares=np.array(range(Nx,Nx*Ny,Nx))#No preguntes solo gozalo
+    multiples_auxiliares-=1#Porque python empieza en 0
 
     aux=-4 #valor de la diagonal principal
-    
-    matriz_aux1=np.zeros([Nx*Ny,Nx*Ny]) #creo matriz Nx*Ny con diagonal principal
+
+    matriz_aux1=np.zeros([Nx*Ny,Nx*Ny])#creo matriz Nx*Ny con diagonal principal
     for i in range(0,Nx*Ny):
         matriz_aux1[i,i]=aux
     for i in range(0,Nx*Ny-1): #arreglo que llena los valores proximos a la diagonal principal
-        
-        if (i not in multiples_auxiliares):
+
+        if i not in multiples_auxiliares:
             matriz_aux1[i+1,i]=1
             matriz_aux1[i,i+1]=1
 
-    for i in range(0,Nx*Ny-Nx): #Se llenan los valores de la matriz 
+    for i in range(0,Nx*Ny-Nx):#Se llenan los valores de la matriz
         matriz_aux1[Nx+i,i]=1
-        
+
     for i in range(0,Nx*Ny-Nx):
         matriz_aux1[i,Nx+i]=1
-    # 
+    #
     # matriz_aux1/=(hx*hy)
     # print(matriz_aux1)
     return matriz_aux1
@@ -138,8 +135,8 @@ def iterationTime2D(u,q,hx,hy,ht,k):
         DESCRIPTION.
 
     """
-    
-    
+
+
     u_updated=u.copy()
 
     u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\

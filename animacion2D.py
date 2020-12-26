@@ -7,19 +7,19 @@ from matplotlib.animation import FuncAnimation
 
 def plotheatmap(xg,yg,u_k, Nt,ht,minimo,maximo):
     # Clear the current plot figure
-        plt.clf()
-        plt.title(f"Temperatura en t = {Nt*ht:.3f} s")
-        plt.xlabel("x")
-        plt.ylabel("y")
-        
+    plt.clf()
+    plt.title(f"Temperatura en t = {Nt*ht:.3f} s")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
     # This is to plot u_k (u at time-step k)
-        plt.pcolormesh(xg,yg,u_k, cmap=plt.cm.jet, vmin=minimo, vmax=maximo,shading='nearest')
-        plt.colorbar()
-    
-        return plt
+    plt.pcolormesh(xg,yg,u_k, cmap=plt.cm.jet, vmin=minimo, vmax=maximo,shading='nearest')
+    plt.colorbar()
+
+    return plt
 
 if __name__ == "__main__":
-    
+
     try:
         in_file_name = sys.argv[1]; out_file_name = sys.argv[2]
     except:
@@ -31,12 +31,12 @@ if __name__ == "__main__":
         Este puede ser tanto .gif como .mp4
         NOTA: Si no tienes ffmpeg no podras guardar como .mp4
 
-        Por ejemplo: python {} ENTRADA SALIDA.gif""".format(__file__,__file__) 
+        Por ejemplo: python {} ENTRADA SALIDA.gif""".format(__file__,__file__)
 
         print(mensaje)
         sys.exit(1)
 
-    
+
     #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'Nt','ht','xg','yg','solucion_animada')
     for key,val in Datos.items():
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         step = int(0.005/ht)
     else:
         step = 50
-    
+
     #Checamos el nombre del archivo de salida
     if out_file_name.endswith('.gif'):
         pass
@@ -63,10 +63,10 @@ if __name__ == "__main__":
     #Parametros de la animacion
     minimo=np.amin(solucion_animada)
     maximo=np.amax(solucion_animada)
-    def animate(Nt):        
+    def animate(Nt):
         plotheatmap(xg,yg,solucion_animada[Nt], Nt,ht,minimo,maximo)
 
-    #Empezamos a generar la animacion    
+    #Empezamos a generar la animacion
     print("Empezando a generar animacion")
     print("Este proceso puede tardar varios minutos dependiendo del numero de soluciones Nt \nVe y echate un refresquito")
     fig = plt.figure()

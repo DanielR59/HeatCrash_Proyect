@@ -1,17 +1,17 @@
 import h5py
-import numpy as np 
+import numpy as np
 import sys
 def leerParametros(archivoHDF5,*parametros,diccionario={}):
     with h5py.File(archivoHDF5,'r') as f:
         for parametro in parametros:
-            valor=f.get(parametro) 
+            valor=f.get(parametro)
             if valor==None:
                 print('Parametro :', parametro,' no encontrado')
                 continue
-                
+
             if valor.dtype == int:
                 diccionario[parametro]=int(np.array(valor))
-                
+
             elif valor.dtype == float:
                 try:
                     diccionario[parametro]=float(np.array(valor))
@@ -20,13 +20,13 @@ def leerParametros(archivoHDF5,*parametros,diccionario={}):
             elif valor.dtype == np.float16:
                 diccionario[parametro]=np.array(valor,dtype=np.float16)
             elif valor.dtype == object:
-                diccionario[parametro]=np.array2string(valor) 
+                diccionario[parametro]=np.array2string(valor)
         return diccionario
 
 
 def saveParametros(archivoHDF5,diccionario):
-    
-    
+
+
     with h5py.File(archivoHDF5,'w') as f:
         for key,values in diccionario.items():
             f[key]=values
@@ -57,18 +57,17 @@ if __name__ == "__main__":
         'bx' : 1,
         'ay' : 0,
         'by' : 1,
-        'Nx' : 50,
-        'Ny' : 50,
-        'Tx1' : 100,
-        'Tx2' : 0,
-        'Ty1' : 1000,
+        'Nx' : 60,
+        'Ny' : 60,
+        'Tx1' : 40,
+        'Tx2' : -20,
+        'Ty1' : 0,
         'Ty2' : -300,
-        'Tini' : -150,
+        'Tini' : 0,
         'ht' : 0.01,
-        'Tmax' : 2,
+        'Tmax' : 1,
         'Tolerancia' : 1E-4,
 
     }
 
     saveParametros(archivo,Datos)
-

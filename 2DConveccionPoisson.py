@@ -4,7 +4,7 @@ import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from funciones2D import iterationTime2D, boundaryCondDirichtlet
+from funciones2D import iterationTime2D, boundary_cond_dirichtlet
 
 if __name__ == "__main__":
     
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     u=np.ones([Ny+2,Nx+2])*Tini #Aplicamos la condicion inicial a la matriz
     #Aplicamos las condiciones de frontera
-    u= boundaryCondDirichtlet(u,Tx1,Tx2,Ty1,Ty2)
+    u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
 
     q=np.ones_like(u)*0

@@ -10,6 +10,7 @@
 workspace.code-workspace
 __pycache__/
 .pylint.d
+.spyproject
 #Archivos
 *.gif
 *.mp4
