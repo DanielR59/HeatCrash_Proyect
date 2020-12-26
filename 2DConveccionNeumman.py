@@ -4,22 +4,7 @@ import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-
-
-def poissonIteration(u,q,hx,hy,ht,k):
-    
-    
-    u_updated=u.copy()
-
-    u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\
-        (k * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
-            (k * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+ht*q[1:-1,1:-1]
-    error=np.linalg.norm(u_updated-u,2)
-    return u_updated,error
-
-
-
-
+from funciones2D import iterationTime2D
 
 if __name__ == "__main__":
     
@@ -94,7 +79,7 @@ if __name__ == "__main__":
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
     for n in range(Nt+1):
         solucion[n,:,:]=u
-        u,error=poissonIteration(u,q,hx,hy,ht,k)
+        u,error=iterationTime2D(u,q,hx,hy,ht,k)
         u[:,-1] = u[:,-2] + Ty2*ht/(k*hy)
         u[:,0] = u[:,1] + Ty1*ht/(k*hy)
         errores.append(error)

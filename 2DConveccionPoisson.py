@@ -4,22 +4,7 @@ import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-
-
-def poissonIteration(u,q,hx,hy,ht,k):
-    
-    
-    u_updated=u.copy()
-
-    u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\
-        (k * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
-            (k * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+ht*q[1:-1,1:-1]
-    error=np.linalg.norm(u_updated-u,2)
-    return u_updated,error
-
-
-
-
+from funciones2D import iterationTime2D, boundaryCondDirichtlet
 
 if __name__ == "__main__":
     
@@ -84,10 +69,8 @@ if __name__ == "__main__":
 
     u=np.ones([Ny+2,Nx+2])*Tini #Aplicamos la condicion inicial a la matriz
     #Aplicamos las condiciones de frontera
-    u[-1,:   ] = Tx2 
-    u[:   ,0   ] = Ty1 
-    u[:   ,-1] = Ty2
-    u[0   ,:   ] = Tx1 
+    u= boundaryCondDirichtlet(u,Tx1,Tx2,Ty1,Ty2)
+
 
     q=np.ones_like(u)*0
     # q[5,5]=200500
@@ -96,7 +79,7 @@ if __name__ == "__main__":
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
     for n in range(Nt+1):
         solucion[n,:,:]=u
-        u,error=poissonIteration(u,q,hx,hy,ht,k)
+        u,error=iterationTime2D(u,q,hx,hy,ht,k)
         errores.append(error)
         if error < Tolerancia:
             print('Iteracion terminada con ',n,' pasos')

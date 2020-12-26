@@ -6,38 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from scipy.sparse.linalg import spsolve
 from scipy.sparse import csr_matrix
-
-
-
-def left_matrix_2D(Nx,Ny):
-        
-    multiples_auxiliares=np.array([i for i in range(Nx,Nx*Ny,Nx)]) #No preguntes solo gozalo
-    multiples_auxiliares-=1 #Porque python empieza en 0 
-
-    aux=-4 #valor de la diagonal principal
-    
-    matriz_aux1=np.zeros([Nx*Ny,Nx*Ny]) #creo matriz Nx*Ny con diagonal principal
-    for i in range(0,Nx*Ny):
-        matriz_aux1[i,i]=aux
-    for i in range(0,Nx*Ny-1): #arreglo que llena los valores proximos a la diagonal principal
-        
-        if (i not in multiples_auxiliares):
-            matriz_aux1[i+1,i]=1
-            matriz_aux1[i,i+1]=1
-
-    for i in range(0,Nx*Ny-Nx): #Se llenan los valores de la matriz 
-        matriz_aux1[Nx+i,i]=1
-        
-    for i in range(0,Nx*Ny-Nx):
-        matriz_aux1[i,Nx+i]=1
-    # 
-    # matriz_aux1/=(hx*hy)
-    # print(matriz_aux1)
-    return matriz_aux1
-
-
-
-
+from funciones2D import left_matrix_2D, boundaryCondDirichtlet
 
 if __name__ == "__main__":
     #                       Tx2
@@ -61,12 +30,12 @@ if __name__ == "__main__":
         in_file_name = sys.argv[1]; out_file_name = sys.argv[2]
     except:
         mensaje = """ Error: La ejecucion de este programa requiere de 2 argumentos.
-        Ejecucion correcta: python 2D_Poisson_01.py entrada salida
+        Ejecucion correcta: python {} entrada salida
         donde "entrada" es el nombre de un archivo que contiene los
         datos del problema :  este se puede generar con el programa hdf5.py.
         El nombre "salida" se usa para almacenar la solucion del problema.
 
-        Por ejemplo: python 2D_Poisson_01.py INPUT_03 SALIDA"""
+        Por ejemplo: python {} INPUT_03 SALIDA""".format(__file__,__file__)
 
         print(mensaje)
         sys.exit(1)
@@ -106,11 +75,8 @@ if __name__ == "__main__":
     #Convertimos a una matriz sparse
     A=csr_matrix(left_matrix_2D(Nx,Ny))
     u = np.zeros((Ny+2, Nx+2))
-    u[-1,:   ] = Tx2 
-    u[:   ,0   ] = Ty1 
-    u[:   ,-1] = Ty2
-    u[0   ,:   ] = Tx1 
-    
+    u= boundaryCondDirichtlet(u,Tx1,Tx2,Ty1,Ty2)
+
     u_sistema = np.zeros([Ny*Nx])
     
     
@@ -128,8 +94,8 @@ if __name__ == "__main__":
     
     
     
-    Datos['xgrid']=xg
-    Datos['ygrid']=yg
+    Datos['xg']=xg
+    Datos['yg']=yg
     Datos['solucion']=u
 
     hdf5.saveParametros(out_file_name,Datos)

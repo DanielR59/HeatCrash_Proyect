@@ -40,9 +40,8 @@ if __name__ == "__main__":
     #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'Nt','ht','xg','yg','solucion_animada')
     for key,val in Datos.items():
-
         exec(key + '=val')
-    #Sleccionamos un paso adecuado
+    #Seleccionamos un paso adecuado
     if Nt>=20000:
         step = int(0.05/ht)
     elif 10000<=Nt<20000:
