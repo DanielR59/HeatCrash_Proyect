@@ -5,7 +5,9 @@ import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from funciones2D import iterationTime2D, boundary_cond_dirichtlet
-
+# =============================================================================
+# Especificación de apertura correcta del programa
+# =============================================================================
 if __name__ == "__main__":
     
     try:
@@ -22,12 +24,18 @@ if __name__ == "__main__":
         print(mensaje)
         sys.exit(1)
 
+# =============================================================================
+# Lectura de parámetros del archivo de entrada
+# =============================================================================
+    
     
     #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny',\
         'Tx1','Tx2','Ty1','Ty2','ht','Tolerancia','Tmax','ht','Tini')
     
-    #imprimimos los parametros y los evaluamos
+# =============================================================================
+# Imprimimos los parametros y los evaluamos
+# =============================================================================
     print('Parametros')
     print('-'*10)
     for key,val in Datos.items():
@@ -41,7 +49,9 @@ if __name__ == "__main__":
     
     
 
-    #Checamos la estabilidad
+# =============================================================================
+# Definimos las condiciones de estabilidad
+# =============================================================================
     k=1
 
 

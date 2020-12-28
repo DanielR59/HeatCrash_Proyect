@@ -67,7 +67,7 @@ if __name__ == "__main__":
     u = np.zeros((Ny+2, Nx+2))
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
-    f = np.ones_like(u)*100 # RHS
+    f = np.ones_like(u)*0 # RHS
 
     for i in range(20000):
         u,error=iterationConv2D(u,f,alpha,kappa,hx,hy)

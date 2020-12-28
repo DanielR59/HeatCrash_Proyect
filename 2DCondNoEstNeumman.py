@@ -69,8 +69,8 @@ if __name__ == "__main__":
 
     u=np.ones([Ny+2,Nx+2])*Tini #Aplicamos la condicion inicial a la matriz
     #Aplicamos las condiciones de frontera
-    u[-1,:   ] = Tx2 
-    u[0   ,:   ] = Tx1 
+    u[-1,:] = Tx2 
+    u[0,:] = Tx1 
 
     q=np.ones_like(u)*0
     # q[5,5]=100500

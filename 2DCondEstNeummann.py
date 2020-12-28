@@ -64,8 +64,8 @@ if __name__ == "__main__":
 
     for i in range(20000):
         u,error=iterationCond2D(u,f,hx,hy)
-        u[-1,:] = u[-2,:] + Ty2/k*hy
-        u[0,:] = u[1,:] + Ty1/k*hy
+        u[:,-1] = u[:,-2] + Ty2/k*hy
+        u[:,0] = u[:,1] + Ty1/k*hy
         if error < Tolerancia:
             break
 
