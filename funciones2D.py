@@ -13,22 +13,22 @@ import numpy as np
 def boundary_cond_dirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
     """
     Funcion que agrega las condiciones de frontera tipo Dirichlet a la matriz
-                           Tx2
-      0,0                 frontera A
-       o-----o-----o-----o-----o-----o-----o-----o
+                            Tx2
+        0,0                 frontera A
+        o-----o-----o-----o-----o-----o-----o-----o
     Ty1|     |     |     |     |     |     |     |Ty2  f
-       o-----o-----o-----o-----o-----o-----o-----o     r
-       |     |     |     |     |     |     |     |     o
-     C o-----o-----o-----o-----o-----o-----o-----o     n
-     C |     |     |     |     |     |     |     | Ny  t
-     C o-----o-----o-----o-----o-----o-----o-----o     e
-       |     |     |     |     |       |   |     |
-       o-----o-----o-----o-----o-----o-----o-----o    D
-       |     |     |     |     |     |     |     |
-       o-----o-----o-----o-----o-----o-----o-----o
-                           Nx
-                           Tx1
-                       frontera B
+        o-----o-----o-----o-----o-----o-----o-----o     r
+        |     |     |     |     |     |     |     |     o
+        C o-----o-----o-----o-----o-----o-----o-----o     n
+        C |     |     |     |     |     |     |     | Ny  t
+        C o-----o-----o-----o-----o-----o-----o-----o     e
+        |     |     |     |     |       |   |     |
+        o-----o-----o-----o-----o-----o-----o-----o    D
+        |     |     |     |     |     |     |     |
+        o-----o-----o-----o-----o-----o-----o-----o
+                            Nx
+                            Tx1
+                        frontera B
 
     Parameters
     ----------
@@ -103,6 +103,58 @@ def left_matrix_2d(Nx,Ny):
     # print(matriz_aux1)
     return matriz_aux1
 
+
+def iterationCond2D(u,q,hx,hy):
+    
+    u_updated = u.copy()
+    u_updated[1:-1,1:-1] =(hy**2*(u[:-2,1:-1] + u[2:,1:-1]) \
+        + hx**2*(u[1:-1,:-2] + u[1:-1,2:])- hy**2*hx**2*q[1:-1,1:-1])/(2*(hx**2+hy**2))
+    
+    error=np.linalg.norm(u_updated-u,2)
+    return u_updated,error
+def iterationConv2D(u,q,alpha,kappa,hx,hy):
+    """
+    Funcion que da una iteracion en tiempo para resolver los casos de Conduccion
+    de Calor no estacionario mediante el método de Euler implicito
+
+    Parameters
+    ----------
+    u : numpy array
+        DESCRIPTION.
+    q : numpy array
+        DESCRIPTION.
+    hx : float
+        DESCRIPTION.
+    hy : float
+        DESCRIPTION.
+    ht : float
+        DESCRIPTION.
+    k : float
+        DESCRIPTION.
+
+    Returns
+    -------
+    u_updated : numpy array
+        DESCRIPTION.
+    error : float
+        DESCRIPTION.
+
+    """
+    aux_diagp=2*(kappa/hx**2+kappa/hy**2) #valor de la diagonal principal
+
+    aux_1i = alpha/(2*hx)
+    aux_2i = kappa/hx**2
+    aux_1j = alpha/(2*hy)
+    aux_2j = kappa/hy**2
+
+    u_updated=u.copy()
+
+    u_updated[1:-1,1:-1] = (u[2:,1:-1]*(aux_2i-aux_1i)+u[:-2,1:-1]*(aux_2i+aux_1i)+\
+        u[1:-1,2:]*(aux_2j-aux_1j)+u[1:-1,:-2]*(aux_2j+aux_1j)+q[1:-1,1:-1])/(2*aux_2i+2*aux_2j)
+
+
+    error=np.linalg.norm(u_updated-u,2)
+    return u_updated,error
 
 # =============================================================================
 # Funciones para casos NO Estacionarios

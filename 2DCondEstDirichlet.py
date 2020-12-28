@@ -2,11 +2,8 @@ import hdf5
 import numpy as np
 import sys
 import time
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from scipy.sparse.linalg import spsolve
-from scipy.sparse import csr_matrix
-from funciones2D import left_matrix_2d, boundary_cond_dirichtlet
+from funciones2D import  boundary_cond_dirichtlet,iterationCond2D
 
 if __name__ == "__main__":
     #                       Tx2
@@ -40,7 +37,7 @@ if __name__ == "__main__":
         print(mensaje)
         sys.exit(1)
 
-    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2')
+    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2','Tolerancia')
 
     for key,val in Datos.items():
         print(key,'=',val)
@@ -54,42 +51,17 @@ if __name__ == "__main__":
     y = np.linspace(ay,by,Ny+2)
     xg, yg = np.meshgrid(x,y)
 
-
-
     print('hx = ',hx)
     print('hy = ',hy)
 
-    f = np.ones((Ny,Nx))*0 # RHS
-    # for i in range(1,Nx):
-    #     f[:,i]=50*np.sin(x[i])
-    f[20,20]=200
-    print(f[20,20])
-    f[0,:]-=Tx1
-    f[-1,:]-=Tx2
-    f[:,0]-=Ty1
-    f[:,-1]-=Ty2
-
-
-    #Convertimos a una matriz sparse
-    A=csr_matrix(left_matrix_2d(Nx,Ny))
     u = np.zeros((Ny+2, Nx+2))
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
-
-    u_sistema = np.zeros([Ny*Nx])
-
-
-    print('-'*80)
-    t1_start = time.process_time()
-    u_sistema=spsolve(A,f.flatten())
-    t1_stop = time.process_time()
-    print('Tiempo para resolver el sistema = {:0.6f} s'.format(t1_stop-t1_start))
-    print('-'*80)
-    u_sistema.shape = (Ny, Nx)
-
-
-    u[1:Ny+1,1:Nx+1] = u_sistema
-
-
+    f = np.ones_like(u)*0 # RHS
+    
+    for i in range(20000):
+        u,error=iterationCond2D(u,f,hx,hy)
+        if error < Tolerancia:
+            break
 
     
     Datos['xg']=xg
