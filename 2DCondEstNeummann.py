@@ -37,7 +37,7 @@ if __name__ == "__main__":
         print(mensaje)
         sys.exit(1)
 
-    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2','Tolerancia')
+    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2','kappa_x','kappa_y','Tolerancia','fuente')
 
     for key,val in Datos.items():
         print(key,'=',val)
@@ -58,14 +58,15 @@ if __name__ == "__main__":
     # u= boundary_cond_dirichtlet(u,Tx1,Tx2,0,0)
     u[-1,:] = Tx2
     u[0,:] = Tx1
-    f = np.ones_like(u)*0 # RHS
     
-    k=1
+    f = np.ones_like(u)*fuente # RHS
+    
+    
 
     for i in range(20000):
-        u,error=iterationCond2D(u,f,hx,hy)
-        u[:,-1] = u[:,-2] + Ty2/k*hy
-        u[:,0] = u[:,1] + Ty1/k*hy
+        u,error=iterationCond2D(u,f,hx,hy,kappa_x,kappa_y)
+        u[:,-1] = u[:,-2] + Ty2/kappa_y*hy
+        u[:,0] = u[:,1] + Ty1/kappa_y*hy
         if error < Tolerancia:
             break
 
