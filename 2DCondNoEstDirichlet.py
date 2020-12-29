@@ -31,7 +31,7 @@ if __name__ == "__main__":
     
     #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny',\
-        'Tx1','Tx2','Ty1','Ty2','ht','Tolerancia','Tmax','ht','Tini')
+        'Tx1','Tx2','Ty1','Ty2','ht','Tolerancia','Tmax','ht','Tini','kappa_x','kappa_y','fuente')
     
 # =============================================================================
 # Imprimimos los parametros y los evaluamos
@@ -46,26 +46,19 @@ if __name__ == "__main__":
 
     hx = (bx-ax)/(Nx+1)
     hy = (by-ay)/(Ny+1)
-    
-    
 
 # =============================================================================
 # Definimos las condiciones de estabilidad
 # =============================================================================
-    k=1
 
-
-    if k*ht/hx**2+k*ht/hy**2<0.5:
+    if kappa_x*ht/hx**2+kappa_y*ht/hy**2<0.5:
         pass
     else:
 
         print('Metodo inestable se cambia el paso en tiempo para cumplir estabilidad')
-        print('ht : ',ht,'--->',min(hx**2,hy**2)/(2*k))
-        ht=0.5/k*(1/hx**2+1/hy**2)**-1
-        
-        
-
-
+        print('ht : ',ht,'--->',0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1)
+        ht=0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1
+    
     Nt=int(Tmax/ht)
     print('Nt = ',Nt)
     print('hx = ',hx)
@@ -82,14 +75,14 @@ if __name__ == "__main__":
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
 
-    q=np.ones_like(u)*0
+    q=np.ones_like(u)*fuente
     # q[5,5]=200500
 
     errores=[]
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
     for n in range(Nt+1):
         solucion[n,:,:]=u
-        u,error=iterationTime2D(u,q,hx,hy,ht,k)
+        u,error=iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y)
         errores.append(error)
         if error < Tolerancia:
             print('Iteracion terminada con ',n,' pasos')
