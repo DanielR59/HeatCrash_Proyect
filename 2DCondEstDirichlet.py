@@ -5,6 +5,10 @@ import time
 import matplotlib.pyplot as plt
 from funciones2D import  boundary_cond_dirichtlet,iterationCond2D
 
+# =============================================================================
+# Especificación de apertura correcta del programa
+# =============================================================================
+
 if __name__ == "__main__":
     #                       Tx2
     #  0,0                 frontera A
@@ -32,50 +36,67 @@ if __name__ == "__main__":
         datos del problema :  este se puede generar con el programa hdf5.py.
         El nombre "salida" se usa para almacenar la solucion del problema.
 
-        Por ejemplo: python {} INPUT_03 SALIDA""".format(__file__,__file__)
+        Por ejemplo: python {} ENTRADA SALIDA""".format(__file__,__file__)
 
         print(mensaje)
         sys.exit(1)
 
+# =============================================================================
+# Lectura de parámetros del archivo de entrada
+# =============================================================================
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny','Tx1','Tx2','Ty1','Ty2','kappa_x','kappa_y','Tolerancia','fuente')
 
-    for key,val in Datos.items():
+# =============================================================================
+# Imprimimos los parametros y los evaluamos
+# =============================================================================
+
+    for key,val in Datos.items(): #ciclo evaluador 
         print(key,'=',val)
         print('-'*10)
         exec(key + '=val')
 
+    hx = (bx-ax)/(Nx+1) # espaciamiento entre nodos dirección X
+    hy = (by-ay)/(Ny+1) # espaciamiento entre nodos dirección Y
+    x = np.linspace(ax,bx,Nx+2) # dominio en dirección X
+    y = np.linspace(ay,by,Ny+2) # dominio en dirección Y
+    xg, yg = np.meshgrid(x,y) # generación de malla
 
-    hx = (bx-ax)/(Nx+1)
-    hy = (by-ay)/(Ny+1)
-    x = np.linspace(ax,bx,Nx+2)
-    y = np.linspace(ay,by,Ny+2)
-    xg, yg = np.meshgrid(x,y)
-
-    print('hx = ',hx)
+    print('hx = ',hx) 
     print('hy = ',hy)
-
+# =============================================================================
+# Definición de la mátriz del sistema
+# =============================================================================
     u = np.zeros((Ny+2, Nx+2))
+    #Aplicación de condiciones de frontera tipo dirichlet
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
     f = np.ones_like(u)*fuente # RHS
-
-    for i in range(20000):
+# =============================================================================
+# Definición las condiciones de Tolerancia: criterio de término anticipado
+# =============================================================================
+    for i in range(20000): #ciclo para Tolerancia
         u,error=iterationCond2D(u,f,hx,hy,kappa_x,kappa_y)
         if error < Tolerancia:
             break
-    
-    
+# =============================================================================
+# Conservar los datos resultantes del calculo en formato hdf5 
+# =============================================================================      
     Datos['xg']=xg
     Datos['yg']=yg
     Datos['solucion']=u
 
     hdf5.saveParametros(out_file_name,Datos)
-
-
-    f1=plt.figure()
+    
+# =============================================================================
+# Generación de la gráfica
+# =============================================================================
+    
+    #Figura 1: mapa de contornos
+    f1=plt.figure() 
     c= plt.contourf(xg, yg, u, 8, alpha=.75,cmap='inferno')
     f1.colorbar(c, shrink=1.0)
 
-    f2 = plt.figure()
+    #Figura 2: línea
+    f2 = plt.figure() 
     ax = f2.gca(projection='3d')
     s = ax.plot_surface(xg, yg, u, cmap='inferno')
     f2.colorbar(s, shrink=0.5)

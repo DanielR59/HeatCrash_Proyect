@@ -14,12 +14,13 @@ if __name__ == "__main__":
         in_file_name = sys.argv[1]; out_file_name = sys.argv[2]
     except:
         mensaje = """ Error: La ejecucion de este programa requiere de 2 argumentos.
-        Ejecucion correcta: python 2D_Poisson_01.py entrada salida
+        Ejecucion correcta: python {} entrada salida
         donde "entrada" es el nombre de un archivo que contiene los
         datos del problema :  este se puede generar con el programa hdf5.py.
         El nombre "salida" se usa para almacenar la solucion del problema.
 
-        Por ejemplo: python 2D_Poisson_01.py INPUT_03 SALIDA"""
+        Por ejemplo: python {} ENTRADA SALIDA""".format(__file__,__file__)
+
 
         print(mensaje)
         sys.exit(1)
@@ -28,8 +29,6 @@ if __name__ == "__main__":
 # Lectura de parámetros del archivo de entrada
 # =============================================================================
     
-    
-    #leemos los parametros
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny',\
         'Tx1','Tx2','Ty1','Ty2','ht','Tolerancia','Tmax','ht','Tini','kappa_x','kappa_y','fuente')
     
@@ -38,20 +37,19 @@ if __name__ == "__main__":
 # =============================================================================
     print('Parametros')
     print('-'*10)
-    for key,val in Datos.items():
+    for key,val in Datos.items(): #ciclo evaluador
         print(key,'=',val)
         print('-'*10)
-        exec(key + '=val')
-        
+        exec(key + '=val')      
 
-    hx = (bx-ax)/(Nx+1)
-    hy = (by-ay)/(Ny+1)
+    hx = (bx-ax)/(Nx+1)  # espaciamiento entre nodos dirección X
+    hy = (by-ay)/(Ny+1)  # espaciamiento entre nodos dirección Y
 
 # =============================================================================
 # Definimos las condiciones de estabilidad
 # =============================================================================
 
-    if kappa_x*ht/hx**2+kappa_y*ht/hy**2<0.5:
+    if kappa_x*ht/hx**2+kappa_y*ht/hy**2<0.5: #ciclo para estabilidad
         pass
     else:
 
@@ -59,59 +57,77 @@ if __name__ == "__main__":
         print('ht : ',ht,'--->',0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1)
         ht=0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1
     
-    Nt=int(Tmax/ht)
+    Nt=int(Tmax/ht) #Número de pasos en tiempo
     print('Nt = ',Nt)
     print('hx = ',hx)
     print('hy = ',hy)
-    #Generamos dominio
-    x = np.linspace(ax,bx,Nx+2)
-    y = np.linspace(ay,by,Ny+2)
-    xg, yg = np.meshgrid(x,y)
+    
+# =============================================================================
+# Generación del dominio
+# =============================================================================
+    x = np.linspace(ax,bx,Nx+2)  #Dominio en dirección X
+    y = np.linspace(ay,by,Ny+2)  #Dominio en dirección X
+    xg, yg = np.meshgrid(x,y)    # Generación de malla
 
-    #Generamos matriz
+# =============================================================================
+# Definición de la mátriz del sistema
+# =============================================================================
 
-    u=np.ones([Ny+2,Nx+2])*Tini #Aplicamos la condicion inicial a la matriz
-    #Aplicamos las condiciones de frontera
+    #Aplicamos la condicion inicial a la matriz
+    u=np.ones([Ny+2,Nx+2])*Tini
+    #Aplicamos las condiciones de frontera tipo dirichlet
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
-
+    #Este es el lado derecho de la ecuación, que contiene la condición inicial
     q=np.ones_like(u)*fuente
     # q[5,5]=200500
 
     errores=[]
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
-    for n in range(Nt+1):
+    for n in range(Nt+1): #Ciclo para resolver en el espacio
         solucion[n,:,:]=u
         u,error=iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y)
         errores.append(error)
-        if error < Tolerancia:
+        if error < Tolerancia: #Ciclo para Tolerancia
             print('Iteracion terminada con ',n,' pasos')
             break
     
     solucion=solucion[:n+1,:,:]
-    
+# =============================================================================
+# Preguntar al usuario si desea guardar la solución
+# =============================================================================    
     answer=input('Quieres guardar la solucion para generar una animación?  [y/n]\n')
     if answer =='y':
-        Datos['solucion_animada']=solucion
+        Datos['solucion_animada']=solucion #Conservar la solución
     elif answer =='n':
         pass
     else:
         pass
+# =============================================================================
+# Conservar los datos resultantes del calculo en formato hdf5 
+# =============================================================================  
     Datos['error']=errores
     Datos['xg']=xg
     Datos['yg']=yg
     Datos['solucion']=u
     Datos['Nt']=n
     Datos['ht']=ht
+    
     hdf5.saveParametros(out_file_name,Datos)
+    
+# =============================================================================
+# Generación de la gráfica
+# =============================================================================
 
+    #figura 1: mapa de contornos
     fig = plt.figure(figsize=(11, 7), dpi=100)
     plt.contourf(xg, yg, u)
     plt.colorbar()
     plt.contour(xg, yg, u)
     plt.xlabel('X')
     plt.ylabel('Y')
-    
+
+    #figura 2: línea
     plt.figure()
     plt.plot(errores)
     plt.semilogy()
