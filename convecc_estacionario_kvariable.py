@@ -12,7 +12,7 @@ import hdf5CE1D
 
 
 #Se leen los parámetros de interés del archivo generado por el programa hdf51D.py desde terminal
-par =hdf5CE1D.leerParametros('Datos.hdf5','L','rho', 'N', 'kappa', 'vel', 'T0', 'TL' ) 
+par =hdf5CE1D.leerParametros('ENTRADA1','L','rho', 'N', 'kappa', 'vel', 'T0', 'TL' ) 
 print(par)
 
 L = par['L']
