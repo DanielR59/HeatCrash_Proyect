@@ -43,7 +43,7 @@ if __name__ == "__main__":
         print(mensaje)
         sys.exit(1)
 
-    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','kappa','Nx','Ny','Tx1','Tx2','Ty1','Ty2','Tolerancia')
+    Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','kappa','Nx','Ny','Tx1','Tx2','Ty1','Ty2','Tolerancia','fuente','c_p','rho','vel_x','vel_y','kappa_x','kappa_y')
 
     for key,val in Datos.items():
         print(key,'=',val)
@@ -61,16 +61,17 @@ if __name__ == "__main__":
     print('hx = ',hx)
     print('hy = ',hy)
 
-
-    alpha=1E-2
-
     u = np.zeros((Ny+2, Nx+2))
     u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
 
-    f = np.ones_like(u)*0 # RHS
+    f = np.ones_like(u)*fuente # RHS
 
+    # Definicion de constantes para el calculo
+    alfa_x=c_p*rho*vel_x
+    alfa_y=c_p*rho*vel_y
+    
     for i in range(20000):
-        u,error=iterationConv2D(u,f,alpha,kappa,hx,hy)
+        u,error=iterationConv2D(u,f,alfa_x,alfa_y,kappa_x,kappa_y,hx,hy)
         if error < Tolerancia:
             break
 

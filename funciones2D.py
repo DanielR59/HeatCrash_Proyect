@@ -61,58 +61,21 @@ def boundary_cond_dirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
 # Funciones para casos Estacionarios
 # =============================================================================
 
-def left_matrix_2d(Nx,Ny):
-    """
-    Funcion que genera la matriz cuadrada izquierda de dimensiones Nx*Ny para
-    resolver el sistema del caso estacionario en 2D
-
-    Parameters
-    ----------
-    Nx : int
-        DESCRIPTION.
-    Ny : int
-        DESCRIPTION.
-
-    Returns
-    -------
-    matriz_aux1 : numpy array
-        DESCRIPTION.
-
-    """
-    multiples_auxiliares=np.array(range(Nx,Nx*Ny,Nx))#No preguntes solo gozalo
-    multiples_auxiliares-=1#Porque python empieza en 0
-
-    aux=-4 #valor de la diagonal principal
-
-    matriz_aux1=np.zeros([Nx*Ny,Nx*Ny])#creo matriz Nx*Ny con diagonal principal
-    for i in range(0,Nx*Ny):
-        matriz_aux1[i,i]=aux
-    for i in range(0,Nx*Ny-1): #arreglo que llena los valores proximos a la diagonal principal
-
-        if i not in multiples_auxiliares:
-            matriz_aux1[i+1,i]=1
-            matriz_aux1[i,i+1]=1
-
-    for i in range(0,Nx*Ny-Nx):#Se llenan los valores de la matriz
-        matriz_aux1[Nx+i,i]=1
-
-    for i in range(0,Nx*Ny-Nx):
-        matriz_aux1[i,Nx+i]=1
-    #
-    # matriz_aux1/=(hx*hy)
-    # print(matriz_aux1)
-    return matriz_aux1
-
-
-def iterationCond2D(u,q,hx,hy):
+def iterationCond2D(u,q,hx,hy,kx,ky):
     
+    B = kx/hx**2
+    C = kx/hx**2
+    D = ky/hy**2
+    E = ky/hy**2
+    A= -(B+C+D+E)
     u_updated = u.copy()
-    u_updated[1:-1,1:-1] =(hy**2*(u[:-2,1:-1] + u[2:,1:-1]) \
-        + hx**2*(u[1:-1,:-2] + u[1:-1,2:])- hy**2*hx**2*q[1:-1,1:-1])/(2*(hx**2+hy**2))
+    u_updated[1:-1,1:-1] = (q[1:-1,1:-1]-B*u[:-2,1:-1]-C*u[2:,1:-1]-D*u[1:-1,:-2]-E*u[1:-1,2:])/A
+    # u_updated[1:-1,1:-1] =(hy**2*(u[:-2,1:-1] + u[2:,1:-1]) \
+        # + hx**2*(u[1:-1,:-2] + u[1:-1,2:])- hy**2*hx**2*q[1:-1,1:-1])/(2*(hx**2+hy**2))
     
     error=np.linalg.norm(u_updated-u,2)
     return u_updated,error
-def iterationConv2D(u,q,alpha,kappa,hx,hy):
+def iterationConv2D(u,q,alpha_x,alpha_y,kappa_x,kappa_y,hx,hy):
     """
     Funcion que da una iteracion en tiempo para resolver los casos de Conduccion
     de Calor no estacionario mediante el método de Euler implicito
@@ -140,12 +103,12 @@ def iterationConv2D(u,q,alpha,kappa,hx,hy):
         DESCRIPTION.
 
     """
-    aux_diagp=2*(kappa/hx**2+kappa/hy**2) #valor de la diagonal principal
+    aux_diagp=2*(kappa_x/hx**2+kappa_y/hy**2) #valor de la diagonal principal
 
-    aux_1i = alpha/(2*hx)
-    aux_2i = kappa/hx**2
-    aux_1j = alpha/(2*hy)
-    aux_2j = kappa/hy**2
+    aux_1i = alpha_x/(2*hx)
+    aux_2i = kappa_x/hx**2
+    aux_1j = alpha_y/(2*hy)
+    aux_2j = kappa_y/hy**2
 
     u_updated=u.copy()
 
@@ -159,7 +122,7 @@ def iterationConv2D(u,q,alpha,kappa,hx,hy):
 # =============================================================================
 # Funciones para casos NO Estacionarios
 # =============================================================================
-def iterationTime2D(u,q,hx,hy,ht,k):
+def iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y):
     """
     Funcion que da una iteracion en tiempo para resolver los casos de Conduccion
     de Calor no estacionario mediante el método de Euler implicito
@@ -192,7 +155,7 @@ def iterationTime2D(u,q,hx,hy,ht,k):
     u_updated=u.copy()
 
     u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\
-        (k * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
-            (k * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+ht*q[1:-1,1:-1]
+        (kappa_y * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
+            (kappa_x * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+ht*q[1:-1,1:-1]
     error=np.linalg.norm(u_updated-u,2)
     return u_updated,error
