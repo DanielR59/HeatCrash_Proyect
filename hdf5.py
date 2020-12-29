@@ -63,17 +63,23 @@ if __name__ == "__main__":
         'bx' : 1,  #Punto final en dirección x
         'ay' : 0,  #Punto inicial en dirección y
         'by' : 1, #Punto final en dirección y
-        'Nx' : 60, # Número de nodos en x
-        'Ny' : 60, # Número de nodos en y
-        'Tx1' : 40, # Condición de frontera 1 en x
-        'Tx2' : -20, #Condición de frontera 2 en x
+        'Nx' : 70, # Número de nodos en x
+        'Ny' : 50, # Número de nodos en y
+        'Tx1' : 0, # Condición de frontera 1 en x
+        'Tx2' : 50, #Condición de frontera 2 en x
         'Ty1' : 0, # Condición de frontera 1 en y
-        'Ty2' : -300, # Condición de frontera 2 en x
+        'Ty2' : 10, # Condición de frontera 2 en x
         'Tini' : 0, # Condición inicial
         'ht' : 0.01, # Espaciamiento en tiempo
         'Tmax' : 1, # Tiempo máximo
         'Tolerancia' : 1E-4, # Tolerancia
-
+        'kappa_x' : 1,
+        'kappa_y' : 1,
+        'fuente' : 0,
+        'c_p' : 1,
+        'rho' :2,
+        'vel_x' : 1,
+        'vel_y' : 1,
     }
 
     saveParametros(archivo,Datos)
