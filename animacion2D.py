@@ -1,4 +1,4 @@
-import hdf5
+from funciones import hdf5
 import numpy as np
 import sys
 import matplotlib.pyplot as plt

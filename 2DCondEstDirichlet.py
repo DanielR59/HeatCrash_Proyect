@@ -1,9 +1,9 @@
-import hdf5
+from funciones import hdf5
 import numpy as np
 import sys
 import time
 import matplotlib.pyplot as plt
-from funciones2D import  boundary_cond_dirichtlet,iterationCond2D
+from funciones.funciones2D import  boundary_cond_dirichtlet,iterationCond2D
 
 # =============================================================================
 # Especificación de apertura correcta del programa

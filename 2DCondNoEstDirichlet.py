@@ -1,10 +1,10 @@
-import hdf5
+from funciones import hdf5
 import numpy as np
 import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from funciones2D import iterationTime2D, boundary_cond_dirichtlet
+from funciones.funciones2D import iterationTime2D, boundary_cond_dirichtlet
 # =============================================================================
 # Especificación de apertura correcta del programa
 # =============================================================================

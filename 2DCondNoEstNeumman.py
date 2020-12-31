@@ -1,10 +1,10 @@
-import hdf5
+from funciones import hdf5
 import numpy as np
 import sys
 import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-from funciones2D import iterationTime2D
+from funciones.funciones2D import iterationTime2D
 
 # =============================================================================
 # Especificación de apertura correcta del programa
