@@ -1,6 +1,7 @@
 from funciones import hdf5
 import numpy as np
 import sys
+import os
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
@@ -35,6 +36,10 @@ if __name__ == "__main__":
 
         print(mensaje)
         sys.exit(1)
+    try:
+        os.mkdir('Animaciones')
+    except FileExistsError:
+        pass
 
 
     #leemos los parametros
@@ -71,6 +76,6 @@ if __name__ == "__main__":
     print("Este proceso puede tardar varios minutos dependiendo del numero de soluciones Nt \nVe y echate un refresquito")
     fig = plt.figure()
     anim = FuncAnimation(fig, animate,frames=range(0,Nt+1,step), interval=500, repeat=False)
-    anim.save(out_file_name)
+    anim.save('Animaciones/'+out_file_name)
     
     print("Animacion lista :D \nBuscala en tu carpeta")
