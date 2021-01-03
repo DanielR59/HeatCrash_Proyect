@@ -62,7 +62,31 @@ def boundary_cond_dirichtlet(matriz,Tx1,Tx2,Ty1,Ty2):
 # =============================================================================
 
 def iterationCond2D(u,q,hx,hy,kx,ky):
-    
+    """
+    iterationCond2D [summary]
+
+    [extended_summary]
+
+    Parameters
+    ----------
+    u : [type]
+        [description]
+    q : [type]
+        [description]
+    hx : [type]
+        [description]
+    hy : [type]
+        [description]
+    kx : [type]
+        [description]
+    ky : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     B = kx/hx**2
     C = kx/hx**2
     D = ky/hy**2
@@ -77,31 +101,33 @@ def iterationCond2D(u,q,hx,hy,kx,ky):
     return u_updated,error
 def iterationConv2D(u,q,alpha_x,alpha_y,kappa_x,kappa_y,hx,hy):
     """
-    Funcion que da una iteracion en tiempo para resolver los casos de Conduccion
-    de Calor no estacionario mediante el método de Euler implicito
+    iterationConv2D [summary]
+
+    [extended_summary]
 
     Parameters
     ----------
-    u : numpy array
-        DESCRIPTION.
-    q : numpy array
-        DESCRIPTION.
-    hx : float
-        DESCRIPTION.
-    hy : float
-        DESCRIPTION.
-    ht : float
-        DESCRIPTION.
-    k : float
-        DESCRIPTION.
+    u : [type]
+        [description]
+    q : [type]
+        [description]
+    alpha_x : [type]
+        [description]
+    alpha_y : [type]
+        [description]
+    kappa_x : [type]
+        [description]
+    kappa_y : [type]
+        [description]
+    hx : [type]
+        [description]
+    hy : [type]
+        [description]
 
     Returns
     -------
-    u_updated : numpy array
-        DESCRIPTION.
-    error : float
-        DESCRIPTION.
-
+    [type]
+        [description]
     """
     aux_diagp=2*(kappa_x/hx**2+kappa_y/hy**2) #valor de la diagonal principal
 
@@ -125,7 +151,7 @@ def iterationConv2D(u,q,alpha_x,alpha_y,kappa_x,kappa_y,hx,hy):
 def iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y):
     """
     Funcion que da una iteracion en tiempo para resolver los casos de Conduccion
-    de Calor no estacionario mediante el método de Euler implicito
+    de Calor no estacionario mediante el método de Euler 
 
     Parameters
     ----------
@@ -157,5 +183,50 @@ def iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y):
     u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\
         (kappa_y * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
             (kappa_x * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+ht*q[1:-1,1:-1]
+    error=np.linalg.norm(u_updated-u,2)
+    return u_updated,error
+
+
+def iterationtimeConvNoEst2D(u,q,alpha_x,alpha_y,kappa_x,kappa_y,hx,hy,ht):
+    """
+    iterationtimeConvNoEst2D [summary]
+
+    [extended_summary]
+
+    Parameters
+    ----------
+    u : [type]
+        [description]
+    q : [type]
+        [description]
+    alpha_x : [type]
+        [description]
+    alpha_y : [type]
+        [description]
+    kappa_x : [type]
+        [description]
+    kappa_y : [type]
+        [description]
+    hx : [type]
+        [description]
+    hy : [type]
+        [description]
+    ht : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
+    
+    u_updated=u.copy()
+    u_updated[1:-1,1:-1] = u[1:-1,1:-1]+\
+            (kappa_y * ht / hy**2)*(u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2])+\
+            (kappa_x * ht / hx**2)* (u[2:,1: -1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1])+\
+            (alpha_x*ht/(2*hx))*(u[1:-1, 2:]-u[1:-1, :-2])+ht*q[1:-1,1:-1]+(alpha_y*ht/(2*hy))*(u[1:-1, 2:]-u[1:-1, :-2])
+    
+
+    
     error=np.linalg.norm(u_updated-u,2)
     return u_updated,error
