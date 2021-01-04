@@ -120,10 +120,10 @@ if __name__ == "__main__":
 # =============================================================================
 
     #figura 1: mapa de contornos
-    GrafContornos(xg, yg, u, 8, 0.75, 'summer')
+    GrafContornos(xg, yg, u, 8, 0.75, 'inferno')
     
     #figura 2: superficie
-    Graf3D(xg, yg, u, 'summer')
+    Graf3D(xg, yg, u, 'inferno')
     
     #figura 3: línea
     GrafError(errores,'C0-')
