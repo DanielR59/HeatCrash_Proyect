@@ -1,6 +1,9 @@
 import h5py
 import numpy as np
 import sys
+# =============================================================================
+# Función para la lectura de parámetros usando la herramienta diccionarios
+# =============================================================================
 def leerParametros(archivoHDF5,*parametros,diccionario={}):
     with h5py.File(archivoHDF5,'r') as f:
         for parametro in parametros:
@@ -23,6 +26,9 @@ def leerParametros(archivoHDF5,*parametros,diccionario={}):
                 diccionario[parametro]=np.array2string(valor)
         return diccionario
 
+# =============================================================================
+# Función para guardar los parámetros en el archivo HDF5
+# =============================================================================
 
 def saveParametros(archivoHDF5,diccionario):
 
@@ -38,7 +44,7 @@ if __name__ == "__main__":
         in_file_name=sys.argv[1]
     except:
         mensaje = """ Error: La ejecucion de este programa requiere de 1 argumento.
-        Ejecucion correcta: python hdf5.py ENTRADA1
+        Ejecucion correcta: python hdf5.py ENTRADA
         donde el nombre "ENTRADA" es el nombre del archivo donde
         se almacenan los datos del problema.
         Los datos que se guardan en el archivo ENTRADA son los que se encuentran en
@@ -52,13 +58,28 @@ if __name__ == "__main__":
     #Generamos parametros
     archivo=in_file_name
     Datos={
-        'L' :1.0, 
-        'N':20, 
-        'kappa' : 0.1,
-        'rho': 1.0, 
-        'vel' : 2.1, 
-        'T0': 1.0, 
-        'TL': 0
+
+        'ax' : 0, #Punto inicial en dirección x
+        'bx' : 1,  #Punto final en dirección x
+        'ay' : 0,  #Punto inicial en dirección y
+        'by' : 1, #Punto final en dirección y
+        'Nx' : 70, # Número de nodos en x
+        'Ny' : 50, # Número de nodos en y
+        'Tx1' : 0, # Condición de frontera 1 en x
+        'Tx2' : 50, #Condición de frontera 2 en x
+        'Ty1' : 0, # Condición de frontera 1 en y
+        'Ty2' : 10, # Condición de frontera 2 en x
+        'Tini' : 0, # Condición inicial
+        'ht' : 0.01, # Espaciamiento en tiempo
+        'Tmax' : 1, # Tiempo máximo
+        'Tolerancia' : 1E-4, # Tolerancia
+        'kappa_x' : 1,
+        'kappa_y' : 1,
+        'fuente' : 0,
+        'c_p' : 1,
+        'rho' :2,
+        'vel_x' : 1,
+        'vel_y' : 1,
     }
 
     saveParametros(archivo,Datos)
