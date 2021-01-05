@@ -100,8 +100,9 @@ if __name__ == "__main__":
     answer=input('Quieres guardar la solucion para generar una animación?  [y/n]\n')
     if answer =='y':
         Datos['solucion_animada']=solucion #Conservar la solución
-        Animacion_Contorno(xg,yg,Zcambio,n)
-        Animacion_Superficie(xg,yg,Zcambio,n)    
+        Datos['Zcambio']=Zcambio
+        # Animacion_Contorno(xg,yg,Zcambio,n)
+        # Animacion_Superficie(xg,yg,Zcambio,n)
     elif answer =='n':
         pass
     else:
