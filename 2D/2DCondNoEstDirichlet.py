@@ -2,9 +2,7 @@ from funciones import hdf5
 import numpy as np
 import sys
 import time
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-from funciones.funciones2D import iterationTime2D, boundary_cond_dirichtlet, GrafContornos, GrafError, Graf3D
+from funciones.funciones2D import iterationTime2D, boundary_cond_dirichtlet, GrafContornos, GrafError, Graf3D,Animacion_Contorno,Animacion_Superficie
 # =============================================================================
 # Especificación de apertura correcta del programa
 # =============================================================================
@@ -84,10 +82,13 @@ if __name__ == "__main__":
 
     errores=[]
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
+    Zcambio=[]
+    Zcambio.append(u)
     for n in range(Nt+1): #Ciclo para resolver en el espacio
         solucion[n,:,:]=u
         u,error=iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y)
         errores.append(error)
+        Zcambio.append(u)
         if error < Tolerancia: #Ciclo para Tolerancia
             print('Iteracion terminada con ',n,' pasos')
             break
@@ -99,6 +100,8 @@ if __name__ == "__main__":
     answer=input('Quieres guardar la solucion para generar una animación?  [y/n]\n')
     if answer =='y':
         Datos['solucion_animada']=solucion #Conservar la solución
+        Animacion_Contorno(xg,yg,Zcambio,3)
+        Animacion_Superficie(xg,yg,Zcambio,3)    
     elif answer =='n':
         pass
     else:
@@ -127,4 +130,4 @@ if __name__ == "__main__":
     
     #figura 3: línea
     GrafError(errores,'C0-')
-    
+   

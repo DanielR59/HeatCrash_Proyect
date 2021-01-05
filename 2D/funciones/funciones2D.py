@@ -258,11 +258,10 @@ def GrafError(error,color):
     plt.semilogy()
     plt.xlabel('Pasos de tiempo')
     plt.ylabel('Error')
-    plt.title('Gráfica de tendencia del error',fontsize=14,color='blue')
+    plt.title('Gráfica de tendencia del error')
     plt.grid()
     plt.show()
     Guardar_grafico(err)
-    
     
 def GrafContornos(x,y,z,niveles,transparencia,mapaColor):
     """
@@ -294,11 +293,10 @@ def GrafContornos(x,y,z,niveles,transparencia,mapaColor):
     cbar.set_label('Temperatura [ºC]')
     plt.xlabel('Distancia x [m]')
     plt.ylabel('Distancia y [m]')
-    plt.title('Distribución de la temperatura (mapa de contornos)',fontsize=14,color='blue')
+    plt.title('Distribución de la temperatura (mapa de contornos)')
     plt.show()
     Guardar_grafico(contorno)
-    
-    
+       
 def Graf3D(x,y,z,mapaColor):
     """
     Función que realiza un gráfico en 3D
@@ -326,11 +324,107 @@ def Graf3D(x,y,z,mapaColor):
     cbar.set_label('Temperatura [ºC]')
     plt.xlabel('Distancia x [m]')
     plt.ylabel('Distancia y [m]')
-    plt.title('Distribución de la temperatura (superficie 3D)',fontsize=14,color='blue')
+    plt.title('Distribución de la temperatura (superficie 3D)')
     plt.show()
     Guardar_grafico(surf)
     
+def Animacion_Contorno(x,y,z,Nt):
+    """
+    Funcion de animación de mapas de contorno
 
+    Parameters
+    ----------
+    x : Array
+        Dominio x
+    y : Array
+        Dominio y
+    z : Array
+        Dominio z
+    Nt : float
+        Pasos de tiempo
+
+    Returns
+    -------
+    None.
+
+    """
+    contorno=plt.figure(figsize=(8,5))  
+    c=plt.contourf(x, y, z[0],8, alpha=0.75,cmap='inferno')
+    cbar=contorno.colorbar(c, shrink=1.0)
+    cbar.set_label('Temperatura [ºC]')
+    plt.xlabel('Distancia x [m]')
+    plt.ylabel('Distancia y [m]')
+    plt.title('Distribución de la temperatura (mapa de contornos)')
+    
+    
+    
+    def cambio(i):
+        plt.contourf(x, y, z[i+1], 8, alpha=0.75,cmap='inferno')
+            
+    anim=animation.FuncAnimation(contorno,            # La figura
+                     cambio, # la función que cambia los datos
+                     interval=1,     # Intervalo entre cuadros en milisegundos
+                     frames=Nt-1,   # Cuadros
+                     repeat=False)   # Permite poner la animación en un ciclo
+    plt.show()
+    answer=input('Quieres guardar la animación?  [y/n]\n')
+    if answer=='y':
+        Nom_Anim=input('Nombre de la animación : ')
+        anim.save('{}.gif'.format(Nom_Anim), writer='imagemagick', fps=10)
+    elif answer =='n':
+        print('\n\tNo guardado')
+    else:
+        print('\n\tNo guardado')
+    
+   
+def Animacion_Superficie(x,y,z,Nt):
+    """
+    Funcion de animación de mapas 3D
+    Parameters
+    ----------
+    x : Array
+        Dominio x
+    y : Array
+        Dominio y
+    z : Array
+        Dominio z
+    Nt : float
+        Pasos de tiempo
+
+    Returns
+    -------
+    None.
+
+    """
+    surf=plt.figure(figsize=(5,4)) 
+    ax=surf.gca(projection='3d')
+    s=ax.plot_surface(x, y, z[0], cmap='inferno')
+    cbar=surf.colorbar(s, shrink=0.5)
+    cbar.set_label('Temperatura [ºC]')
+    plt.xlabel('Distancia x [m]')
+    plt.ylabel('Distancia y [m]')
+    plt.title('Distribución de la temperatura (superficie 3D)')
+    
+    def cambio(i):
+        ax.plot_surface(x, y, z[i+1], cmap='inferno')
+            
+    anim=animation.FuncAnimation(surf,            # La figura
+                     cambio, # la función que cambia los datos
+                     interval=1,     # Intervalo entre cuadros en milisegundos
+                     frames=Nt-1,   # Cuadros
+                     repeat=False)   # Permite poner la animación en un ciclo
+    plt.show()
+    answer=input('Quieres guardar la animación?  [y/n]\n')
+    if answer=='y':
+        Nom_Anim=input('Nombre de la animación : ')
+        anim.save('{}.gif'.format(Nom_Anim), writer='imagemagick', fps=10)
+    elif answer =='n':
+        print('\n\tNo guardado')
+    else:
+        print('\n\tNo guardado')
+    
+    
+    
 def Guardar_grafico(Nombre_figura):
     """
     Función que guarda los gráficos realizados en el proceso
@@ -356,13 +450,12 @@ def Guardar_grafico(Nombre_figura):
             print('\n\tEl gráfico fue salvado con éxito')
         elif formato==2:
             Nombre_figura.savefig('{}.png'.format(nombre))
+            print('\n\tEl gráfico fue salvado con éxito')
         elif formato==3:
             Nombre_figura.savefig('{}.jpg'.format(nombre))
+            print('\n\tEl gráfico fue salvado con éxito')
         else:
             print('\n\tFormato invalido')
     else:
         print('\n\tEl gráfico no ha sido salvado')
-    
-    
-    
     
