@@ -2,52 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from matplotlib.animation import FuncAnimation
-import h5py
+from Funciones1D import hdf5
 import matplotlib.image as mpimg
-from tkinter import *
-from PIL import Image, ImageTk, ImageSequence
-
-bienvenida = Tk()
-bienvenida.title('HeatCrash')
-
-
-LOGO = ImageTk.PhotoImage(Image.open("HC2.png"))
-
-titulo = Label(bienvenida, text='BIENVENIDO')
-titulo.pack()
-my_label = Label(image=LOGO)
-my_label.pack()
-
-button_quit = Button(bienvenida, text='CONTINUAR', command = bienvenida.quit)
-button_quit.pack()
-
-bienvenida.mainloop()
-
-
-
-img = mpimg.imread('HC1.png')
-imgplot = plt.imshow(img)
-plt.title('¡Bienvenido!')
-plt.axis('off')
-plt.show()
-
-def leer_Parametros(archivoHDF5,*parametros,diccionario={}):
-    with h5py.File(archivoHDF5,'r') as f:
-        for parametro in parametros:
-            valor=f.get(parametro) 
-            if valor==None:
-                print('Parametro :', parametro,' no encontrado')
-                continue
-                
-            if valor.dtype == int:
-                diccionario[parametro]=int(np.array(valor))
-                
-            elif valor.dtype == float:
-                diccionario[parametro]=float(np.array(valor))
-                
-            elif valor.dtype == object:
-                diccionario[parametro]=np.array2string(valor) 
-        return diccionario
 
 
 def Laplaciano_Dirichlet(N,r,k):
@@ -92,7 +48,7 @@ def tipo_Fronteras():
 #Definicion de como leer las variables:
 def lectura_Variables(tipoFrontera):
 	opcionVariables = int(input('''
-	    Escriba el numero de la opcion que prefiera:
+		Escriba el numero de la opcion que prefiera:
 
 	    1 - Leer las variables desde un archivo HDF5
 	    2 - Ingresar las variables desde la terminal
@@ -100,7 +56,7 @@ def lectura_Variables(tipoFrontera):
 	    >> '''))
 
 	if opcionVariables == 1:
-	    paramsArchivo = leerParametros('Datos','tolerancia','a','b','k', 'Tmax', 'N','boundA', 'boundB')
+	    paramsArchivo = hdf5.leerParametros('Datos','tolerancia','a','b','k', 'Tmax', 'N','boundA', 'boundB')
 	    tolerancia = paramsArchivo['tolerancia']
 	    a = paramsArchivo['a']
 	    b = paramsArchivo['b']
