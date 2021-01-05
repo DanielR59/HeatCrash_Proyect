@@ -249,7 +249,7 @@ def GrafSol(x,U,xs,sa):
     plt.plot(xs,sa,'--b',label='Solucion analítica')
     plt.xlabel('Dominio')
     plt.ylabel('Temperatura')
-    plt.title('Comparación de soluciones')
+    plt.title('Comparación de soluciones',fontsize=14,color='blue')
     plt.grid()
     plt.legend(loc='upper left')
     plt.show()
@@ -363,7 +363,7 @@ def GrafSol2(x,U,k):
     """
     fig1=plt.figure()
     plt.plot(x,U,'-or', label='Solucion numérica')
-    plt.title('Solucion')
+    plt.title('Solucion',fontsize=14,color='blue')
     plt.xlabel('Dominio')
     plt.ylabel('Temperatura')
     plt.legend(loc='upper left')
@@ -373,7 +373,7 @@ def GrafSol2(x,U,k):
     
     fig2=plt.figure(2)
     plt.plot(x,k,'-b',label='K variable')
-    plt.title('Solucion')
+    plt.title('Comportamiento de K',fontsize=14,color='blue')
     plt.xlabel('Dominio')
     plt.ylabel('Valor de K')
     plt.legend(loc='upper left')

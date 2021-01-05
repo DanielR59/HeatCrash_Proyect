@@ -238,30 +238,87 @@ def iterationtimeConvNoEst2D(u,q,alpha_x,alpha_y,kappa_x,kappa_y,hx,hy,ht):
 # Función para crear gráficos
 # =============================================================================
 def GrafError(error,color):
+    """
+    Función para graficar el error
+
+    Parameters
+    ----------
+    error : numpy array
+        Arreglo con los valores de los errores
+    color : char
+        Color de la linea de trazado.
+
+    Returns
+    -------
+    None.
+
+    """
     err=plt.figure(figsize=(5,5))
     plt.plot(error, color)
     plt.semilogy()
     plt.xlabel('Pasos de tiempo')
     plt.ylabel('Error')
-    plt.title('Gráfica de tendencia del error')
+    plt.title('Gráfica de tendencia del error',fontsize=14,color='blue')
     plt.grid()
     plt.show()
     Guardar_grafico(err)
     
     
 def GrafContornos(x,y,z,niveles,transparencia,mapaColor):
+    """
+    Función que realiza un gráfico de contornos
+
+    Parameters
+    ----------
+    x : numpy array
+        Datos del dominio en x.
+    y : numpy array
+        Datos del dominio en y.
+    z : numpy array
+        Matriz con datos de la malla.
+    niveles : int
+        Numero de contornos a usar
+    transparencia : float
+        Transparencia del mapa, valores entre 0 y 1
+    mapaColor :string
+        Tipo de mapa de color a usar
+
+    Returns
+    -------
+    None.
+
+    """
     contorno=plt.figure(figsize=(8,5))  
     c=plt.contourf(x, y, z,niveles, alpha=transparencia,cmap=mapaColor)
     cbar=contorno.colorbar(c, shrink=1.0)
     cbar.set_label('Temperatura [ºC]')
     plt.xlabel('Distancia x [m]')
     plt.ylabel('Distancia y [m]')
-    plt.title('Distribución de la temperatura (mapa de contornos)')
+    plt.title('Distribución de la temperatura (mapa de contornos)',fontsize=14,color='blue')
     plt.show()
     Guardar_grafico(contorno)
     
     
 def Graf3D(x,y,z,mapaColor):
+    """
+    Función que realiza un gráfico en 3D
+
+    Parameters
+    ----------
+    x : numpy array
+        Datos del dominio en x.
+    y : numpy array
+        Datos del dominio en y.
+    z : numpy array
+        Matriz con datos del dominio en z
+    mapaColor :string
+        Tipo de mapa de color a usar
+
+    Returns
+    -------
+    None.
+
+    """
     surf=plt.figure(figsize=(5,4)) 
     ax=surf.gca(projection='3d')
     s=ax.plot_surface(x, y, z, cmap=mapaColor)
@@ -269,12 +326,26 @@ def Graf3D(x,y,z,mapaColor):
     cbar.set_label('Temperatura [ºC]')
     plt.xlabel('Distancia x [m]')
     plt.ylabel('Distancia y [m]')
-    plt.title('Distribución de la temperatura (superficie 3D)')
+    plt.title('Distribución de la temperatura (superficie 3D)',fontsize=14,color='blue')
     plt.show()
     Guardar_grafico(surf)
     
 
 def Guardar_grafico(Nombre_figura):
+    """
+    Función que guarda los gráficos realizados en el proceso
+    en diferentes formatos
+
+    Parameters
+    ----------
+    Nombre_figura : figure
+        Nombre de la figura a guardar
+
+    Returns
+    -------
+    None.
+
+    """
     guardar=int(input('\n\tSalvar gráfico?\n1) SI\n2) NO\n: '))
     if guardar==1:
         nombre=input('\nNombre de salida: ')
