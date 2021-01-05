@@ -2,7 +2,8 @@ from funciones import hdf5
 import numpy as np
 import sys
 import time
-from funciones.funciones2D import iterationTime2D, boundary_cond_dirichtlet, GrafContornos, GrafError, Graf3D,Animacion_Contorno,Animacion_Superficie
+from funciones.funciones2D import iterationTime2D, GrafContornos, Graf3D, GrafError,Animacion_Contorno,Animacion_Superficie
+
 # =============================================================================
 # Especificación de apertura correcta del programa
 # =============================================================================
@@ -19,14 +20,12 @@ if __name__ == "__main__":
 
         Por ejemplo: python {} ENTRADA SALIDA""".format(__file__,__file__)
 
-
         print(mensaje)
         sys.exit(1)
 
 # =============================================================================
 # Lectura de parámetros del archivo de entrada
-# =============================================================================
-    
+# =============================================================================    
     Datos=hdf5.leerParametros(in_file_name,'ax','ay','bx','by','Nx','Ny',\
         'Tx1','Tx2','Ty1','Ty2','ht','Tolerancia','Tmax','ht','Tini','kappa_x','kappa_y','fuente')
     
@@ -38,68 +37,71 @@ if __name__ == "__main__":
     for key,val in Datos.items(): #ciclo evaluador
         print(key,'=',val)
         print('-'*10)
-        exec(key + '=val')      
+        exec(key + '=val')
+        
 
-    hx = (bx-ax)/(Nx+1)  # espaciamiento entre nodos dirección X
-    hy = (by-ay)/(Ny+1)  # espaciamiento entre nodos dirección Y
-
+    hx = (bx-ax)/(Nx+1) # espaciamiento entre nodos dirección X
+    hy = (by-ay)/(Ny+1) # espaciamiento entre nodos dirección Y
+    
 # =============================================================================
 # Definimos las condiciones de estabilidad
 # =============================================================================
 
-    if kappa_x*ht/hx**2+kappa_y*ht/hy**2<0.5: #ciclo para estabilidad
+    if kappa_x*ht/hx**2+kappa_y*ht/hy**2<0.5:
         pass
     else:
 
         print('Metodo inestable se cambia el paso en tiempo para cumplir estabilidad')
         print('ht : ',ht,'--->',0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1)
         ht=0.5*(kappa_x/hx**2+kappa_y/hy**2)**-1
-    
-    Nt=int(Tmax/ht) #Número de pasos en tiempo
+
+    Nt=int(Tmax/ht)  #Número de pasos en tiempo
     print('Nt = ',Nt)
     print('hx = ',hx)
     print('hy = ',hy)
-    
 # =============================================================================
 # Generación del dominio
 # =============================================================================
-    x = np.linspace(ax,bx,Nx+2)  #Dominio en dirección X
-    y = np.linspace(ay,by,Ny+2)  #Dominio en dirección X
-    xg, yg = np.meshgrid(x,y)    # Generación de malla
+    x = np.linspace(ax,bx,Nx+2) #Dominio en dirección X
+    y = np.linspace(ay,by,Ny+2) #Dominio en dirección X
+    xg, yg = np.meshgrid(x,y)   #Generación de malla
 
 # =============================================================================
 # Definición de la mátriz del sistema
 # =============================================================================
-
+    
     #Aplicamos la condicion inicial a la matriz
-    u=np.ones([Ny+2,Nx+2])*Tini
-    #Aplicamos las condiciones de frontera tipo dirichlet
-    u= boundary_cond_dirichtlet(u,Tx1,Tx2,Ty1,Ty2)
+    u=np.ones([Ny+2,Nx+2])*Tini 
+    #Aplicamos las condiciones de frontera tipo Neumman
+    u[-1,:] = Tx2 
+    u[0,:] = Tx1 
 
     #Este es el lado derecho de la ecuación, que contiene la condición inicial
     q=np.ones_like(u)*fuente
-    # q[5,5]=200500
+    # q[5,5]=100500
 
     errores=[]
     solucion=np.empty([50000,Ny+2,Nx+2],dtype=np.float16)
     Zcambio=[]
     Zcambio.append(u)
-    for n in range(Nt+1): #Ciclo para resolver en el espacio
+    for n in range(Nt+1):  #Ciclo para resolver en el espacio
         solucion[n,:,:]=u
         u,error=iterationTime2D(u,q,hx,hy,ht,kappa_x,kappa_y)
+        u[:,-1] = u[:,-2] + Ty2*ht/(kappa_y*hy)
+        u[:,0] = u[:,1] + Ty1*ht/(kappa_y*hy)
         errores.append(error)
         Zcambio.append(u)
-        if error < Tolerancia: #Ciclo para Tolerancia
+        if error < Tolerancia:
             print('Iteracion terminada con ',n,' pasos')
             break
     
     solucion=solucion[:n+1,:,:]
 # =============================================================================
 # Preguntar al usuario si desea guardar la solución
-# =============================================================================    
+# =============================================================================      
     answer=input('Quieres guardar la solucion para generar una animación?  [y/n]\n')
     if answer =='y':
-        Datos['solucion_animada']=solucion #Conservar la solución
+        Datos['solucion_animada']=solucion
         Animacion_Contorno(xg,yg,Zcambio,n)
         Animacion_Superficie(xg,yg,Zcambio,n)    
     elif answer =='n':
@@ -117,7 +119,6 @@ if __name__ == "__main__":
     Datos['ht']=ht
     
     hdf5.saveParametros(out_file_name,Datos)
-    
 # =============================================================================
 # Generación de la gráfica
 # =============================================================================
@@ -128,6 +129,5 @@ if __name__ == "__main__":
     #figura 2: superficie
     Graf3D(xg, yg, u, 'inferno')
     
-    #figura 3: línea
-    GrafError(errores,'C0-')
-   
+    #figura 3: línea de errores
+    GrafError(errores,'C1-')
