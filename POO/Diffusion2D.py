@@ -26,10 +26,10 @@ class Diffusion2D(Coefficients2D):
         deltaX=self.dx
         deltaY = self.dy
 
-        aE+=Gamma/deltaX
-        aW+=Gamma/deltaX
-        aN+=Gamma/deltaY
-        aS+=Gamma/deltaY
+        aE+=Gamma*deltaY/deltaX
+        aW+=Gamma*deltaY/deltaX
+        aN+=Gamma*deltaX/deltaY
+        aS+=Gamma*deltaX/deltaY
 
         aP += aE+aN+aS+aW 
 

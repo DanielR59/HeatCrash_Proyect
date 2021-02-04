@@ -15,9 +15,11 @@ class Advection2D(Coefficients2D):
         self.u = np.zeros([nvx-1,nvy-1])
         
 
-    def setU(self, u):
-        self.u+=u
+    def setUx(self, u):
+        self.ux+=u
         
+    def setUy(self, u):
+        self.uy+=u
 
     def calcCoef(self):
 
@@ -26,31 +28,26 @@ class Advection2D(Coefficients2D):
         aP = self.aP
         aN = self.aN
         aS = self.aS
-        u = self.u
+        ux = self.ux
+        uy = self.uy
         rho = self.rho
         nvx = self.nvx
         nvy = self.nvy
 
     
-
-        CE = - rho * u[1:,:]*0.5
-        CW = rho * u[:-1,:]*0.5
-        CN = -rho * u[:,:-1]*0.5
-        CS = rho * u[:,1:]*0.5
-
         for i in range(1,nvx-1):
             for j in range(1,nvy-1):
-                CE = - rho * u[i,j]*0.5
-                CW = rho * u[i-1,j]*0.5
-                CN = -rho * u[i,j]*0.5
-                CS = rho * u[i,j-1]*0.5
+                CE = - rho * ux[i,j]*0.5
+                CW = rho * ux[i-1,j]*0.5
+                CN = -rho * uy[i,j]*0.5
+                CS = rho * uy[i,j-1]*0.5
                 aE[i,j]+=CE
                 aW[i,j]+=CW
                 aS[i,j]+=CS
                 aN[i,j]+=CN
 
 
-                aP[i,j] += CE+CN+CW+CS+rho*(u[i,j]-u[i-1,j])+rho* (u[i,j]-u[i,j-1])
+                aP[i,j] += CE+CN+CW+CS+rho*(ux[i,j]-ux[i-1,j])+rho* (uy[i,j]-uy[i,j-1])
 
 
 
