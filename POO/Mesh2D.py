@@ -38,9 +38,9 @@ class Mesh2D():
 
 
     def createMesh(self):
-        first_volumeX = self.deltaX / 2
+        first_volumeX = self.dx / 2
         final_volumeX = self.lengthX - first_volumeX
-        first_volumeY = self.deltaY / 2
+        first_volumeY = self.dy / 2
         final_volumeY = self.lengthY - first_volumeY
 
         self.__x = np.zeros(self.volumesX)
@@ -54,8 +54,6 @@ class Mesh2D():
         self.__y[-1] =self.lengthY
 
         self.X,self.Y = np.meshgrid(self.__x,self.__y)
-        print('Malla X\n',self.X,'Malla Y\n',self.Y)
-        return self.X,self.Y
 
 if __name__ == '__main__':
     objeto=Mesh2D(3,3,4,3,1.5,6.2)

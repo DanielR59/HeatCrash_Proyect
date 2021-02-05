@@ -33,8 +33,10 @@ class Matrix2D():
         aS_aux = aS[1:-1,1:-1].ravel()
         aN_aux = aN[1:-1,1:-1].ravel()
         
-        for i in range(0,Nx*Ny-1):
+        for i in range(0,Nx*Ny):
             A[i,i] = aP_aux[i]
+
+        for i in range(0,Nx*Ny-1):
             if (i not in multiples_auxiliares):
                 A[i+1,i] = aW_aux[i]
                 A[i,i+1] = aE_aux[i]
