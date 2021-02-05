@@ -13,13 +13,15 @@ class Mesh2D():
         self.lengthY = lengthY
         self.calcDeltaX()
         self.calcDeltaY()
+        self.adjustNodesVolumesX(nodesX, volumesX)
+        self.adjustNodesVolumesY(nodesY, volumesY)
 
 
     def calcDeltaX(self):
-        self.deltaX = self.lengthX / (self.nodesX - 1)
+        self.dx = self.lengthX / (self.nodesX - 1)
             
     def calcDeltaY(self):
-        self.deltaY = self.lengthY / (self.nodesY - 1)
+        self.dy = self.lengthY / (self.nodesY - 1)
 
     def adjustNodesVolumesX(self,nodes,volumes):
         if nodes:

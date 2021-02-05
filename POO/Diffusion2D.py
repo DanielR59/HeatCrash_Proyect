@@ -13,7 +13,7 @@ class Diffusion2D(Coefficients2D):
         self.Gamma = Gamma
         self.dx = deltaX
         self.dy = deltaY
-        self.u = np.zeros([nvx-1,nvy-1])
+        
 
     def calcCoef(self):
 
