@@ -12,8 +12,9 @@ class Advection2D(Coefficients2D):
         self.rho = rho
         self.dx = deltaX
         self.dy = deltaY
-        self.u = np.zeros([nvx-1,nvy-1])
-        
+        self.ux = np.zeros([nvx-1,nvy-1])
+        self.uy = np.zeros([nvx-1,nvy-1])
+
 
     def setUx(self, u):
         self.ux+=u
@@ -51,7 +52,6 @@ class Advection2D(Coefficients2D):
 
 
 
-        print(aP)
 
 
 
