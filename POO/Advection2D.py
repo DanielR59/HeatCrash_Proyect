@@ -35,7 +35,7 @@ class Advection2D(Coefficients2D):
         nvx = self.nvx
         nvy = self.nvy
 
-    
+        
         for i in range(1,nvx-1):
             for j in range(1,nvy-1):
                 CE = - rho * ux[i,j]*0.5

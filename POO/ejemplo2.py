@@ -1,8 +1,6 @@
-
 import FVM2D as fvm
 import numpy as np
 import matplotlib.pyplot as plt
-
 
 
 longitudx = 1 # meters
@@ -11,6 +9,7 @@ TA = 100 # °C
 TB = 500 # °C 
 TC = 100
 TD = 500
+q = 1e+06
 k  = 1000 # W/m.K
 
 #Generamos la malla
@@ -18,13 +17,14 @@ malla = fvm.Mesh2D(40,40,lengthX=longitudx, lengthY=longitudy)
 print(malla.nodesX,malla.volumesX)
 malla.createMesh()
 print(malla.dx)
+
 #Generamos, almacenamos y calculamos los coeficientes del problema de difusion
 df2 = fvm.Diffusion2D(nvx = malla.volumesX,nvy = malla.volumesY, deltaX= malla.dx, deltaY = malla.dy, Gamma=k)
 df2.alloc()
 df2.calcCoef()
 # print(df2.aP,df2.aE,sep='\n')
 
-# df2.setSu(500)
+df2.setSu(q)
 
 #Generamos el vector que almacenara la solucion
 T = np.zeros([df2.nvx,df2.nvy])
