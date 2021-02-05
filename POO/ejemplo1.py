@@ -17,7 +17,7 @@ k  = 1000 # W/m.K
 malla = fvm.Mesh2D(4,4,lengthX=longitudx, lengthY=longitudy)
 print(malla.nodesX,malla.volumesX)
 malla.createMesh()
-
+print(malla.dx)
 #Generamos, almacenamos y calculamos los coeficientes del problema de difusion
 df2 = fvm.Diffusion2D(nvx = malla.volumesX,nvy = malla.volumesY, deltaX= malla.dx, deltaY = malla.dy, Gamma=k)
 df2.alloc()
@@ -50,13 +50,14 @@ print(A.A)
 # print(np.linalg.inv(A.A)) #Probablemente lo que está mal es A
 
 print(T[1:-1,1:-1].size,A.A.shape,df2.Su[1:-1,1:-1].size)
+print(df2.Su[1:-1,1:-1].flatten())
 
 #Solucionamos el sistema lineal
 T_aux = np.linalg.solve(A.A,df2.Su[1:-1,1:-1].flatten())
 T_aux.shape = (Nx,Ny)
 
 T[1:-1,1:-1] =T_aux
-
+# print(T)
 
 f1 = plt.figure()
 c = plt.contourf(malla.X,malla.Y,T,8, alpha=.75,cmap='inferno')

@@ -38,12 +38,12 @@ class Matrix2D():
 
         for i in range(0,Nx*Ny-1):
             if (i not in multiples_auxiliares):
-                A[i+1,i] = aW_aux[i]
-                A[i,i+1] = aE_aux[i]
+                A[i+1,i] = -aW_aux[i]
+                A[i,i+1] = -aE_aux[i]
 
         for i in range(0,Nx*Ny-Nx): #Se llenan los valores de la matriz 
-            A[Nx+i,i]=aN_aux[i] 
-            A[i,Nx+i] = aS_aux[i]
+            A[Nx+i,i]=-aN_aux[i] 
+            A[i,Nx+i] = -aS_aux[i]
 
 
 

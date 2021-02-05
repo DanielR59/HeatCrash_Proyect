@@ -43,18 +43,18 @@ class Coefficients2D():
         aS = Coefficients2D.aS
 
         if wall == 'LEFT_WALL':
-            aP[:,0] += aW[:,0]
-            Su[:,1] += 2 * aW[:,0] * phi
+            aP[:,1] += aW[:,1]
+            Su[:,1] += 2 * aW[:,1] * phi
         elif wall == 'RIGHT_WALL':
-            aP[:,-1] += aE[:,-1]
-            Su[:,-2] += 2 * aE[:,-1] * phi
+            aP[:,-2] += aE[:,-2]
+            Su[:,-2] += 2 * aE[:,-2] * phi
         
         elif wall == 'TOP_WALL':
-            aP[0,:] += aN[0,:]
-            Su[1,:] += 2 * aN[0,:] * phi
+            aP[1,:] += aN[1,:]
+            Su[1,:] += 2 * aN[1,:] * phi
         elif wall == 'BOTTOM_WALL':
-            aP[-1,:] += aS[-1,:]
-            Su[-2,:] += 2 * aS[-1,:] * phi
+            aP[-2,:] += aS[-2,:]
+            Su[-2,:] += 2 * aS[-2,:] * phi
     @staticmethod
     def bcNeumman(wall, flux):
         aP = Coefficients2D.aP

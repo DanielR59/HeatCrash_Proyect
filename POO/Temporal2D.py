@@ -18,14 +18,14 @@ class Temporal2D(Coefficients2D):
         aP = self.aP
         Su = self.Su
         rho = self.rho
-        dx_dt = self.dx/self.dt
-        dy_dt = self.dy/self.dt
+        dxy_dt = self.dx*self.dy/self.dt
+
 
         for i in range(1,self.nvx-1):
             for j in range(1, self.nvy-1):
                 #DUDA
-                aP[i,j] += rho * (dx_dt+dy_dt)
-                Su[i,j] += phi_old[i,j]*(dx_dt+dy_dt)
+                aP[i,j] += rho * (dxy_dt)
+                Su[i,j] += phi_old[i,j]*(dxy_dt)
 
 if __name__ == '__main__':
 
