@@ -63,7 +63,8 @@ class Coefficients2D():
         aN = Coefficients2D.aN
         aS = Coefficients2D.aS
         Su = Coefficients2D.Su
-        dx = Coefficients2D.delta
+        dx = Coefficients2D.deltaX
+        dy = Coefficients2D.deltaY
 
         if wall == 'LEFT_WALL':
             aP[:,0] -= aW[:,0]
@@ -74,18 +75,24 @@ class Coefficients2D():
 
         elif wall == 'TOP_WALL':
             aP[0,:] -= aN[0,:]
-            Su[1,:] -= aN[0,:] * flux * dx
+            Su[1,:] -= aN[0,:] * flux * dy
             
         elif wall == 'BOTTOM_WALL':
             aP[-1,:] -= aE[-1,:]
-            Su[-2,:] += aE[-1,:] * flux * dx
+            Su[-2,:] += aE[-1,:] * flux * dy
 #DUDA
     def setSu(self, q):
         Su = Coefficients2D.Su
         dx = Coefficients2D.deltaX
         Su += q * dx
     #Aqui igual   
-
+    def cleanCoefficients(self):
+        Coefficients2D.aP[:,:] = 0
+        Coefficients2D.aE[:,:] = 0
+        Coefficients2D.aW[:,:] = 0
+        Coefficients2D.aS[:,:] = 0
+        Coefficients2D.aN[:,:] = 0
+        Coefficients2D.Su[:,:] = 0
         
 
 if __name__ == '__main__':

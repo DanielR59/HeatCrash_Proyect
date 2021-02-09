@@ -64,3 +64,7 @@ c = plt.contourf(malla.X,malla.Y,T,8, alpha=.75,cmap='inferno')
 f1.colorbar(c, shrink=1.0)
 plt.show()
 
+
+
+    
+

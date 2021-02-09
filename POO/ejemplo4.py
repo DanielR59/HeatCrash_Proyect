@@ -3,20 +3,20 @@ import FVM2D as fvm
 import numpy as np
 import matplotlib.pyplot as plt
 
-longitudx = 1 # meters
-longitudy = 1
+longitudx = 10 # meters
+longitudy = 10
 TA = 100 # °C 
-TB = 500 # °C 
+TB = 200 # °C 
 TC = 100
 TD = 500
 q = 1e+06
 rho = 1.0 # kg/m^3
-k  = .1 # W/m.K
-ux = 2.1 # m/s
-uy = 2.1 # m/s
+k  = 1000 # W/m.K
+ux = .5 # m/s
+uy = 1 # m/s
 
 #Generamos la malla
-malla = fvm.Mesh2D(40,40,lengthX=longitudx, lengthY=longitudy)
+malla = fvm.Mesh2D(50,50,lengthX=longitudx, lengthY=longitudy)
 print(malla.nodesX,malla.volumesX)
 malla.createMesh()
 print(malla.dx)
@@ -56,7 +56,7 @@ coef.bcDirichlet('BOTTOM_WALL',TB)
 #
 A = fvm.Matrix2D(malla.volumesX,malla.volumesY)
 A.build(coef)
-# print(A.A)
+print(A.A)
 
 #Solucionamos el sistema lineal
 T_aux = np.linalg.solve(A.A,coef.Su[1:-1,1:-1].flatten())
@@ -69,6 +69,13 @@ T[1:-1,1:-1] =T_aux
 f1 = plt.figure()
 c = plt.contourf(malla.X,malla.Y,T,8, alpha=.75,cmap='inferno')
 f1.colorbar(c, shrink=1.0)
+
+
+surf=plt.figure(figsize=(5,4)) 
+ax=surf.gca(projection='3d')
+s=ax.plot_surface(malla.X,malla.Y,T, cmap='inferno')
+cbar=surf.colorbar(s, shrink=0.5)
+
 plt.show()
 
 

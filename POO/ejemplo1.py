@@ -38,9 +38,9 @@ T_aux=T[1:-1,1:-1].ravel()
 Nx=df2.nvx-2
 Ny = df2.nvy-2
 df2.bcDirichlet('LEFT_WALL',TA)
-df2.bcDirichlet('TOP_WALL',TC)
+df2.bcNeumman('TOP_WALL',TC)
 df2.bcDirichlet('RIGHT_WALL',TD)
-df2.bcDirichlet('BOTTOM_WALL',TB)
+df2.bcNeumman('BOTTOM_WALL',TB)
 #
 #GENERAMOS Y CALCULAMOS LA MATRIZ A PARTIR DE LOS COEFICIENTES
 A = fvm.Matrix2D(malla.volumesX,malla.volumesY)
@@ -63,4 +63,7 @@ f1 = plt.figure()
 c = plt.contourf(malla.X,malla.Y,T,8, alpha=.75,cmap='inferno')
 f1.colorbar(c, shrink=1.0)
 plt.show()
+
+
+
 
