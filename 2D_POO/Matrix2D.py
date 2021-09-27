@@ -4,9 +4,9 @@
 
 import numpy as np
 
-class Matrix2D():
+class Matrix2D:
 
-    def __init__(self, nvx = None, nvy = None):
+    def __init__(self, nvx : int = None, nvy : int = None):
         
 
         self.Nx = nvx -2

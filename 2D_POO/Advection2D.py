@@ -4,7 +4,7 @@ from Coefficients2D import Coefficients2D
 
 class Advection2D(Coefficients2D):
 
-    def __init__(self, nvx=None, nvy=None, deltaX=None, deltaY=None, rho = None):
+    def __init__(self, nvx:int=None, nvy:int=None, deltaX:float=None, deltaY:float=None, rho :float= None):
         super().__init__(nvx=nvx, nvy=nvy, deltaX=deltaX, deltaY=deltaY)
     
         self.nvx=nvx
@@ -61,9 +61,9 @@ if __name__== '__main__':
 
     Holi = Advection2D(4,4,1,1,2)
     Holi.alloc()
-    Holi.setU(np.eye(3)*5.9)
+    Holi.setUx(5.9)
     Holi.calcCoef()
 
     Holi.bcDirichlet('TOP_WALL',5)
 
-
+    

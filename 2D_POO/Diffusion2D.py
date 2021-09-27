@@ -5,7 +5,7 @@ import numpy as np
 class Diffusion2D(Coefficients2D):
 
 
-    def __init__(self, nvx=None, nvy=None, deltaX=None, deltaY=None, Gamma = None):
+    def __init__(self, nvx : int =None, nvy:int=None, deltaX:float=None, deltaY:float=None, Gamma:float = None):
         super().__init__(nvx=nvx, nvy=nvy, deltaX=deltaX, deltaY=deltaY)
     
         self.nvx=nvx

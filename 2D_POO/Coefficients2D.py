@@ -1,8 +1,6 @@
 import numpy as np
 #CHECAR DUDAS
-class Coefficients2D():
-
-
+class Coefficients2D:
 
     aP = None
     aE = None
@@ -15,7 +13,8 @@ class Coefficients2D():
     deltaX = None
     deltaY = None
 
-    def __init__(self, nvx = None, nvy = None, deltaX = None, deltaY = None):
+    def __init__(self, nvx : int = None, nvy : int = None, deltaX : float = None, deltaY : float = None):
+
         Coefficients2D.nvx=nvx
         Coefficients2D.nvy=nvy
         Coefficients2D.deltaX=deltaX
@@ -32,9 +31,10 @@ class Coefficients2D():
         Coefficients2D.aS = np.zeros((nvx,nvy))
         Coefficients2D.aN = np.zeros((nvx,nvy))
         Coefficients2D.Su = np.zeros((nvx,nvy))
-    @staticmethod
+
     #CHECAR TEORIA
-    def bcDirichlet(wall, phi):
+    @staticmethod
+    def bcDirichlet(wall : str, phi : float):
         aP = Coefficients2D.aP
         aE = Coefficients2D.aE
         aW = Coefficients2D.aW
@@ -56,7 +56,7 @@ class Coefficients2D():
             aP[-2,:] += aS[-2,:]
             Su[-2,:] += 2 * aS[-2,:] * phi
     @staticmethod
-    def bcNeumman(wall, flux):
+    def bcNeumman(wall : str, flux : float):
         aP = Coefficients2D.aP
         aE = Coefficients2D.aE
         aW = Coefficients2D.aW
@@ -81,7 +81,7 @@ class Coefficients2D():
             aP[-1,:] -= aE[-1,:]
             Su[-2,:] += aE[-1,:] * flux * dy
 #DUDA
-    def setSu(self, q):
+    def setSu(self, q : float):
         Su = Coefficients2D.Su
         dx = Coefficients2D.deltaX
         Su += q * dx
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
 
     Algo=Coefficients2D(8,8, 0.1, 0.1)
-
+    
     Algo.alloc()
     Algo.aP[:,:] = 5
     Algo.aW[:,:] = 2

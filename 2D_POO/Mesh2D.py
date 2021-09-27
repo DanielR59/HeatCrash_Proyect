@@ -1,9 +1,9 @@
 import numpy as np
 
 
-class Mesh2D():
+class Mesh2D:
 
-    def __init__(self, nodesX = None, nodesY = None, volumesX = None, volumesY = None, lengthX = None, lengthY = None):
+    def __init__(self, nodesX : int = None, nodesY : int = None, volumesX : int = None, volumesY : int = None, lengthX : float = None, lengthY : float = None):
 
         self.nodesX = nodesX
         self.nodesY = nodesY
@@ -23,13 +23,13 @@ class Mesh2D():
     def calcDeltaY(self):
         self.dy = self.lengthY / (self.nodesY - 1)
 
-    def adjustNodesVolumesX(self,nodes,volumes):
+    def adjustNodesVolumesX(self,nodes : int,volumes : int):
         if nodes:
             self.volumesX = self.nodesX + 1
         if volumes:
             self.nodesX = self.volumesX - 1        
     
-    def adjustNodesVolumesY(self,nodes,volumes):
+    def adjustNodesVolumesY(self,nodes : int,volumes : int):
         if nodes:
             self.volumesY = self.nodesY + 1
         if volumes:
@@ -57,7 +57,8 @@ class Mesh2D():
 
 if __name__ == '__main__':
     objeto=Mesh2D(3,3,4,3,1.5,6.2)
-    print(objeto.createMesh())
+    objeto.createMesh()
+    print(objeto.X)
 
     
     
